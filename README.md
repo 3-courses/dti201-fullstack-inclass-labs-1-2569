@@ -1,30 +1,13 @@
 # DTI201 Full-Stack In-Class Labs 1/2569
 
-คลัง lab สาธารณะสำหรับรายวิชา **DTI 201: ทักษะการพัฒนาซอฟต์แวร์แบบฟุลสแตก** ภาคการศึกษา **1/2569**
+ชุดฝึกปฏิบัติการในห้องเรียนสำหรับรายวิชา **DTI 201: ทักษะการพัฒนาซอฟต์แวร์แบบฟุลสแตก** ภาคการศึกษา **1/2569**
 
-lab ชุดนี้จัดใหม่ให้เดินตามแผนบรรยายของรายวิชา และใช้โปรเจกต์เดียวต่อเนื่องทั้งภาคชื่อ **Course Book Explorer** เริ่มจากการทำหน้าเว็บของ “หนังสือจริงที่ใช้ในรายวิชา” ด้วย HTML/CSS แล้วค่อยต่อยอดเป็นเว็บแอปที่มี JavaScript, React, API, database, security, Docker, testing, learning dataset และ final demo
+lab ชุดนี้ใช้พร้อมกับการบรรยายของรายวิชา และใช้โปรเจกต์เดียวต่อเนื่องทั้งภาคชื่อ **Course Book Explorer** เริ่มจากการทำหน้าเว็บของ “หนังสือจริงที่ใช้ในรายวิชา” ด้วย HTML/CSS แล้วค่อยต่อยอดเป็นเว็บแอปที่มี JavaScript, React, API, database, security, Docker, testing, learning dataset และ final demo
 
 > แนวคิดสำคัญ: นักศึกษาควรเข้าใจการเดินทางของข้อมูลตั้งแต่เนื้อหาในหนังสือ → โครงสร้าง HTML → หน้าตา CSS → interaction → API → database → deployment ไม่ใช่กระโดดไป React ตั้งแต่ยังไม่เข้าใจเว็บพื้นฐาน
 
-## ใช้คู่กับ repo หลักของรายวิชา
 
-- Course hub: https://github.com/3-courses/dti-fullstack
-- Public lab repo นี้: https://github.com/3-courses/dti201-fullstack-inclass-labs-1-2569
-
-## แหล่งเนื้อหาที่ใช้จัด lab
-
-สรุปแหล่งที่ใช้ไว้ใน [docs/source-inventory.md](docs/source-inventory.md)
-
-แหล่งหลัก:
-
-- DTI-SCORM: `https://github.com/wdiazcarballo/DTI-SCORM.git`
-- prior public labs: `https://github.com/wdiazcarballo/DTI201-FullStack-Course.git`
-- prior course materials and aggregate notes: `https://github.com/wdiazcarballo/fullstack-168`
-- current course plan and rubrics: `https://github.com/3-courses/dti-fullstack`
-
-เนื้อหา private/admin เช่นรายชื่อ คะแนน individual reports และ raw assessment files ไม่ถูกนำเข้ามาใน repo สาธารณะนี้
-
-## Lab Sequence ใหม่
+## ลำดับการฝึกปฏิบัติการ
 
 | สัปดาห์ | Lab | หัวข้อ | ไฟล์ |
 |---:|---:|---|---|
@@ -45,7 +28,7 @@ lab ชุดนี้จัดใหม่ให้เดินตามแผ�
 | 15 | 15 | Performance, resource use, sustainability และ polish | [labs/15-performance-sustainability-polish.md](labs/15-performance-sustainability-polish.md) |
 | 16 | 16 | Final demo, oral defense และ handoff | [labs/16-final-demo-oral-defense.md](labs/16-final-demo-oral-defense.md) |
 
-ดู mapping กับแผนบรรยายได้ที่ [docs/lecture-alignment.md](docs/lecture-alignment.md)
+
 
 ## Legacy labs จากปี 2568
 
