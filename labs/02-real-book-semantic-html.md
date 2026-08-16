@@ -103,6 +103,51 @@
 - heading เรียงจาก `h1` → `h2` → `h3`
 - อ่านหน้าเว็บได้แม้ยังไม่มี CSS
 
+## Individual Practice: Coffee Shop App
+
+หลังคาบนี้ให้ทำหน้า HTML ของ **Coffee Shop App** รายบุคคล โดยใช้ pattern เดียวกับ Course Book Explorer แต่เปลี่ยน domain เป็นร้านกาแฟ
+
+สิ่งที่ต้องมี:
+
+- `index.html` สำหรับหน้า coffee menu
+- `header`, `nav`, `main`, `section`
+- `article` สำหรับเมนูแต่ละรายการ เช่น Americano, Latte, Matcha
+- heading ที่เรียงลำดับ `h1` -> `h2` -> `h3`
+- form สำหรับ order หรือ review แบบยังไม่ต้องทำงานจริง
+- `label` คู่กับ input ทุกช่อง
+
+ข้อมูลขั้นต่ำ:
+
+- เมนูกาแฟอย่างน้อย 3 รายการ
+- แต่ละรายการมีชื่อ, category, ราคา, คำอธิบายสั้น ๆ ที่เขียนเอง
+- form มี field อย่างน้อย `customerName`, `menuItem`, `quantity` หรือ `comment`
+
+หลักฐานที่ต้องส่ง:
+
+- screenshot หรือ DevTools note ที่เห็น semantic structure
+- commit message เช่น `Build semantic coffee shop page`
+- Learning Journey entry อธิบายว่าทำไมเลือก `article`, `section`, `label`
+
+Verification:
+
+```bash
+git status --short
+```
+
+เปิดไฟล์ใน browser แล้วตรวจว่า navigation link ไป section ถูก และ form field มี label ครบ
+
+## Group Project Transfer
+
+ในทีม ให้เริ่มคิดว่า group project ของทีมจะมี content block และ form อะไรบ้าง ยังไม่ต้อง build เต็ม
+
+ส่งเป็น note สั้น ๆ ใน issue หรือ `docs/Outline.md`:
+
+- ผู้ใช้หลักของ app คือใคร
+- workflow หลัก 1 อย่างคืออะไร
+- content block ใดควรเป็น `article`, `section`, `table`, หรือ `form`
+- form แรกของ project ต้องเก็บ field อะไร
+- จะตรวจ semantic structure อย่างไรด้วย DevTools
+
 ## DevTools
 
 เปิด browser DevTools แล้วตรวจ:
