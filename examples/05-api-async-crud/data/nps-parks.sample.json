@@ -1,0 +1,29 @@
+{
+  "total": "3",
+  "data": [
+    {
+      "id": "sample-acad",
+      "parkCode": "acad",
+      "fullName": "Acadia National Park",
+      "url": "https://www.nps.gov/acad/index.htm",
+      "description": "ข้อมูลตัวอย่างแบบ offline สำหรับฝึก render รายการอุทยาน",
+      "states": "ME"
+    },
+    {
+      "id": "sample-dena",
+      "parkCode": "dena",
+      "fullName": "Denali National Park & Preserve",
+      "url": "https://www.nps.gov/dena/index.htm",
+      "description": "ข้อมูลตัวอย่างนี้ใช้เมื่อห้องเรียนเชื่อมต่อ NPS API ไม่ได้",
+      "states": "AK"
+    },
+    {
+      "id": "sample-yose",
+      "parkCode": "yose",
+      "fullName": "Yosemite National Park",
+      "url": "https://www.nps.gov/yose/index.htm",
+      "description": "เปลี่ยนกลับเป็น live mode เพื่อดูข้อมูลจริงจาก NPS API",
+      "states": "CA"
+    }
+  ]
+}

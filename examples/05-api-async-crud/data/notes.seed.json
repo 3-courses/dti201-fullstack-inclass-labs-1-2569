@@ -1,0 +1,10 @@
+[
+  {
+    "id": "note-seed-acad",
+    "parkCode": "acad",
+    "parkName": "Acadia National Park",
+    "text": "ตัวอย่าง note: ตรวจ response shape และสถานะ HTTP ก่อนนำข้อมูลไป render",
+    "createdAt": "2026-09-01T00:00:00.000Z",
+    "updatedAt": "2026-09-01T00:00:00.000Z"
+  }
+]

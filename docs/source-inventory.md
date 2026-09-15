@@ -91,6 +91,23 @@ Source:
 
 - `labs/legacy-2568/`
 
+## 5. Chapter 4 recovery materials
+
+Local public course materials:
+
+- `slide/dti201-full-stack-course-book.pdf` — หนังสือฉบับเต็มและลำดับเนื้อหาหลัก
+- `slide/Chapter4-dti201-full-stack-course-book (1).pdf`
+- `slide/20260908-HTTP-FetchAPI (1).png`
+- `slide/AJAX_training_index.html`
+
+External reference:
+
+- `https://github.com/LinkedInLearning/JavaScript-Ajax-and-Fetch-3809063`
+- `https://www.nps.gov/subjects/developer/api-documentation.htm`
+- `https://www.nps.gov/subjects/developer/guides.htm`
+
+ใช้สำหรับ Lab 05 ในระดับแนวคิดและ API contract โดยเขียนกิจกรรมใหม่ให้ครอบคลุม asynchronous JavaScript, Promise, Fetch error handling, NPS GET และ local JSON CRUD ไม่คัดลอก key หรือ source code ที่ฝัง credential จาก external repository
+
 ## Design Decision
 
 lab ใหม่ไม่ใช่การ copy SCORM หรือ copy lab เดิมทีละบรรทัด แต่เป็นการจัดกิจกรรมใหม่ให้เข้ากับแผน 1/2569 โดยใช้โปรเจกต์เดียวคือ **Course Book Explorer** เพื่อให้ทุกสัปดาห์ต่อกันเป็นระบบเดียว

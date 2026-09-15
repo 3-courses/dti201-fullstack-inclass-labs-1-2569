@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="บทเรียนเชิงปฏิบัติ DTI201 เรื่อง AJAX, Fetch API, JSON, error handling และ DOM">
+  <title>DTI201 · AJAX & Fetch Lab</title>
+  <style>
+    :root{--ink:#11263a;--muted:#597083;--paper:#f5f8fb;--card:#fff;--line:#d9e3ea;--navy:#09243b;--cyan:#00a6a6;--amber:#ffb11b;--red:#c43d4d;--code:#071a2a;--shadow:0 12px 30px rgba(9,36,59,.09)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 system-ui,-apple-system,"Noto Sans Thai","Tahoma",sans-serif}button,input,select{font:inherit}
+    .top{position:sticky;top:0;z-index:20;background:rgba(245,248,251,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .top-inner{max-width:1260px;margin:auto;padding:.75rem 1.25rem;display:flex;align-items:center;gap:1rem}.brand{font-weight:850;color:var(--navy);white-space:nowrap}.brand span{color:var(--cyan)}
+    .progress-track{height:6px;background:#dce7ec;flex:1;border-radius:99px;overflow:hidden}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--amber));transition:.35s}.score{font-size:.9rem;color:var(--muted);white-space:nowrap}
+    .shell{max-width:1260px;margin:auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:2rem;padding:2rem 1.25rem 5rem}.side{position:sticky;top:76px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:1rem;box-shadow:var(--shadow)}
+    .eyebrow{font-size:.75rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--cyan)}.side h2{font-size:1rem;margin:.3rem 0 1rem}.nav a{display:block;padding:.55rem .7rem;border-left:3px solid transparent;color:var(--muted);text-decoration:none;border-radius:0 8px 8px 0}.nav a:hover,.nav a.active{color:var(--navy);background:#edf7f7;border-left-color:var(--cyan)}
+    main{min-width:0}.hero{background:var(--navy);color:white;border-radius:26px;padding:clamp(1.5rem,4vw,3.5rem);position:relative;overflow:hidden;box-shadow:var(--shadow)}.hero:after{content:"{ }";position:absolute;right:4%;top:-18%;font:900 12rem/1 monospace;color:rgba(255,255,255,.055)}.hero h1{font-size:clamp(2rem,5vw,4.2rem);line-height:1.05;margin:.5rem 0 1rem;max-width:760px}.hero p{max-width:720px;color:#d2e3ec;font-size:1.08rem}.meta{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.5rem}.pill{border:1px solid rgba(255,255,255,.22);padding:.35rem .7rem;border-radius:99px;font-size:.88rem}
+    section{scroll-margin-top:90px;margin-top:2rem}.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:clamp(1.25rem,3vw,2.2rem);box-shadow:var(--shadow)}h2{font-size:clamp(1.45rem,3vw,2.1rem);line-height:1.25;margin:.1rem 0 .75rem}h3{margin:1.3rem 0 .45rem;line-height:1.35}.lead{font-size:1.08rem;color:var(--muted);max-width:820px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.card{border:1px solid var(--line);border-radius:15px;padding:1rem;background:#fbfdfe}.card h3{margin-top:0}.num{display:inline-grid;place-items:center;width:2rem;height:2rem;border-radius:9px;background:var(--navy);color:white;font-weight:800;margin-right:.45rem}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:1.4rem 0}.flow div{position:relative;background:#edf7f7;border:1px solid #c3e4e3;border-radius:13px;padding:.8rem;text-align:center;font-weight:750}.flow div:not(:last-child):after{content:"→";position:absolute;right:-.58rem;color:var(--cyan);z-index:2}
+    pre{position:relative;background:var(--code);color:#d8eef5;padding:1.1rem;border-radius:14px;overflow:auto;line-height:1.55;font-size:.9rem}code{font-family:"Cascadia Code",Consolas,monospace}.kw{color:#67d9ff}.str{color:#ffd166}.fn{color:#7ee787}.comment{color:#7894a5}.copy{position:absolute;right:.6rem;top:.6rem;border:1px solid #496274;background:#17334a;color:white;border-radius:8px;padding:.3rem .6rem;cursor:pointer}
+    .insight{border-left:5px solid var(--amber);background:#fff8e8;padding:1rem 1.1rem;border-radius:0 13px 13px 0;margin:1rem 0}.danger{border-left-color:var(--red);background:#fff1f3}.lab{background:linear-gradient(145deg,#eef8f8,#fff);border:1px solid #b9dfdf;border-radius:18px;padding:1.2rem}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:.7rem}.controls input,.controls select{width:100%;border:1px solid #b8c8d2;border-radius:10px;padding:.7rem;background:white}.primary{border:0;border-radius:10px;background:var(--cyan);color:white;padding:.7rem 1rem;font-weight:800;cursor:pointer}.primary:hover{filter:brightness(.92)}.primary:disabled{opacity:.55;cursor:wait}.console{min-height:145px;margin-top:1rem;background:#061724;color:#cee8f2;border-radius:13px;padding:1rem;font:14px/1.6 monospace;white-space:pre-wrap}.status{display:inline-flex;align-items:center;gap:.5rem;font-weight:750}.dot{width:.7rem;height:.7rem;border-radius:50%;background:#8495a1}.dot.loading{background:var(--amber);animation:pulse .9s infinite}.dot.ok{background:#12a66a}.dot.bad{background:var(--red)}@keyframes pulse{50%{opacity:.25}}
+    .quiz{border-top:1px dashed var(--line);padding-top:1rem;margin-top:1rem}.quiz label{display:block;border:1px solid var(--line);border-radius:11px;padding:.65rem .8rem;margin:.5rem 0;cursor:pointer}.quiz label:has(input:checked){border-color:var(--cyan);background:#eefafa}.feedback{min-height:1.8rem;font-weight:750;margin-top:.5rem}.ok-text{color:#08794e}.bad-text{color:var(--red)}.check{display:flex;gap:.6rem;align-items:flex-start;margin:.7rem 0}.check input{margin-top:.42rem;accent-color:var(--cyan)}
+    table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{text-align:left;padding:.7rem;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--navy);background:#eef4f7}.footer{color:var(--muted);text-align:center;padding-top:2rem}.kbd{font:12px monospace;border:1px solid #afbdc5;border-bottom-width:2px;border-radius:5px;padding:.1rem .3rem;background:white}
+    @media(max-width:900px){.shell{grid-template-columns:1fr}.side{position:static}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}.nav a.active{border-bottom-color:var(--cyan)}.flow{grid-template-columns:1fr}.flow div:not(:last-child):after{content:"↓";right:50%;bottom:-1rem;top:auto}.controls{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.score{display:none}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="top-inner"><div class="brand">DTI<span>201</span></div><div class="progress-track" aria-label="ความคืบหน้า"><div class="progress-bar" id="progress"></div></div><div class="score" id="score">กิจกรรม 0/6</div></div></header>
+  <div class="shell">
+    <aside class="side"><div class="eyebrow">ภาค 1/2569 · 700001</div><h2>AJAX & Fetch Learning Lab</h2><nav class="nav" aria-label="สารบัญ">
+      <a href="#mental">1 · ภาพใหญ่</a><a href="#async">2 · Async</a><a href="#url">3 · Request URL</a><a href="#fetch">4 · Fetch</a><a href="#errors">5 · Errors</a><a href="#dom">6 · JSON → DOM</a><a href="#challenge">7 · ภารกิจ</a>
+    </nav></aside>
+    <main>
+      <article class="hero"><div class="eyebrow">ทักษะการพัฒนาซอฟต์แวร์แบบฟุลสแตก</div><h1>จากการคลิก<br>สู่ข้อมูลบนหน้าจอ</h1><p>แกะเส้นทางของข้อมูลตั้งแต่ event ใน browser ผ่าน HTTP และ API จนกลับมาเปลี่ยน DOM พร้อมทดลองสถานะ loading, success และ failure ด้วยตนเอง</p><div class="meta"><span class="pill">ผศ. ดร.วรวรรณ ดีอัซ การ์บาโย</span><span class="pill">JavaScript</span><span class="pill">90–120 นาที</span><span class="pill">ลงมือทำ 6 จุด</span></div></article>
+
+      <section id="mental" class="panel"><div class="eyebrow">01 · Mental model</div><h2>AJAX ไม่ใช่ภาษา แต่คือรูปแบบการสื่อสาร</h2><p class="lead">หน้าเว็บเดิมคงอยู่ Browser ขอเฉพาะข้อมูลที่ต้องใช้ในเบื้องหลัง แล้ว JavaScript นำข้อมูลนั้นมาปรับส่วนหนึ่งของหน้า</p>
+        <div class="flow"><div>เหตุการณ์ของผู้ใช้</div><div>สร้าง Request</div><div>API ประมวลผล</div><div>รับ Response</div><div>ปรับ DOM</div></div>
+        <div class="grid"><div class="card"><h3><span class="num">A</span>แบบเดิม</h3><p>ขอเอกสาร HTML ใหม่ทั้งหน้า การนำทางและการ render เริ่มใหม่ แม้ต้องการเปลี่ยนข้อมูลเพียงจุดเดียว</p></div><div class="card"><h3><span class="num">B</span>แบบ AJAX</h3><p>ขอข้อมูลเป็นส่วนย่อย มักอยู่ในรูป JSON แล้วเปลี่ยนเฉพาะองค์ประกอบที่เกี่ยวข้อง เช่น ผลค้นหา ตะกร้าสินค้า หรือ feed</p></div></div>
+        <div class="insight"><strong>Insight</strong> ประโยชน์จริงไม่ใช่แค่ “เร็วกว่า” แต่คือการแยกวงจรชีวิตของข้อมูลออกจากวงจรชีวิตของเอกสาร HTML ทำให้ UI ตอบสนองต่อเจตนาของผู้ใช้ได้ละเอียดขึ้น</div>
+        <div class="quiz" data-answer="b"><strong>ตรวจความเข้าใจ</strong><p>เมื่อเลื่อน feed แล้วบทความใหม่ปรากฏโดยหน้าไม่ reload สิ่งใดเกิดขึ้นมากที่สุด</p><label><input type="radio" name="q1" value="a"> Browser ดาวน์โหลด HTML ทั้งหน้าใหม่แต่ซ่อนไว้</label><label><input type="radio" name="q1" value="b"> JavaScript ขอข้อมูลเพิ่มและนำมาสร้าง DOM</label><label><input type="radio" name="q1" value="c"> CSS สร้างข้อมูลบทความเอง</label><button class="primary quiz-btn">ตรวจคำตอบ</button><div class="feedback" aria-live="polite"></div></div>
+      </section>
+
+      <section id="async" class="panel"><div class="eyebrow">02 · Event loop</div><h2>Asynchronous ทำให้ “รอได้โดยไม่หยุดทั้งหน้า”</h2><p class="lead">JavaScript เริ่มงานเครือข่าย แล้วคืนการควบคุมให้ main thread เพื่อรับ click, scroll และวาด UI ต่อ เมื่อ response พร้อม callback ของ Promise จึงกลับเข้าคิว</p>
+        <table><thead><tr><th>ชั้นการทำงาน</th><th>หน้าที่</th><th>ความเข้าใจผิดที่พบบ่อย</th></tr></thead><tbody><tr><td>Call stack</td><td>รัน JavaScript ทีละงาน</td><td>ไม่ได้แปลว่าทุกอย่างบน browser มี thread เดียวทั้งหมด</td></tr><tr><td>Web APIs</td><td>ดูแลงาน timer, network และ event ภายนอก stack</td><td><code>fetch()</code> ไม่ได้นั่งรออยู่ใน stack</td></tr><tr><td>Microtask queue</td><td>เก็บงานต่อจาก Promise</td><td><code>.then()</code> ไม่ทำงานทันที ณ บรรทัดที่เขียน</td></tr></tbody></table>
+        <pre><button class="copy">คัดลอก</button><code><span class="fn">console.log</span>(<span class="str">"1 เริ่ม"</span>);
+<span class="fn">fetch</span>(url).then(() =&gt; console.log(<span class="str">"3 response พร้อม"</span>));
+<span class="fn">console.log</span>(<span class="str">"2 หน้าเว็บยังทำงานต่อ"</span>);</code></pre>
+        <div class="insight"><strong>คำทำนายก่อนรัน</strong> ลำดับมักเป็น 1 → 2 → 3 เพราะ <code>fetch()</code> คืน Promise ทันที ส่วนงานใน <code>.then()</code> รอจน Promise resolved</div>
+        <label class="check"><input type="checkbox" class="task"><span>ฉันอธิบายได้ว่าเหตุใดบรรทัดที่เขียนทีหลังจึงอาจแสดงผลก่อน response</span></label>
+      </section>
+
+      <section id="url" class="panel"><div class="eyebrow">03 · API literacy</div><h2>อ่าน Request URL ให้เป็น ก่อนเขียน Fetch</h2><p class="lead">URL ที่ดีตอบได้ 4 เรื่อง ได้แก่ server อยู่ที่ใด ใช้ endpoint ใด ส่งเงื่อนไขอะไร และยืนยันสิทธิ์อย่างไร</p>
+        <pre><code>https://developer.nps.gov/api/v1/parks?stateCode=CA&amp;limit=10&amp;api_key=YOUR_KEY
+└──────────── base URL ────────────┘└endpoint┘ └──── query parameters ────┘</code></pre>
+        <div class="grid"><div class="card"><h3>Checklist ก่อนทดลอง</h3><p>อ่าน documentation → เลือก endpoint → ตรวจ method → ระบุ required parameters → ทดลอง response → สำรวจ JSON shape</p></div><div class="card"><h3>API key คือข้อมูลลับหรือไม่</h3><p>Key ฝั่ง client มองเห็นได้เสมอ อย่าฝังคีย์ที่มีสิทธิ์สูงใน JavaScript จริง ควรจำกัด domain, quota และ proxy ผ่าน backend เมื่อจำเป็น</p></div></div>
+        <div class="lab"><h3>ประกอบ URL แบบปลอดภัย</h3><div class="controls"><select id="state"><option value="CA">California · CA</option><option value="NY">New York · NY</option><option value="UT">Utah · UT</option></select><input id="limit" type="number" min="1" max="50" value="10" aria-label="จำนวนผลลัพธ์"><button class="primary" id="buildUrl">สร้าง URL</button></div><div class="console" id="urlOutput">เลือกค่าแล้วกด “สร้าง URL”</div></div>
+      </section>
+
+      <section id="fetch" class="panel"><div class="eyebrow">04 · Fetch pipeline</div><h2>Fetch สำเร็จ 2 ชั้น จึงจะได้ข้อมูล</h2><p class="lead">ชั้นแรกได้ <code>Response</code> ซึ่งบอกสถานะและถือ body stream ชั้นที่สองใช้ <code>response.json()</code> เพื่ออ่าน stream และแปลง JSON เป็น object</p>
+        <pre><button class="copy">คัดลอก</button><code><span class="kw">async function</span> <span class="fn">loadParks</span>(url) {
+  <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(url);
+  <span class="kw">if</span> (!response.ok) {
+    <span class="kw">throw new</span> Error(<span class="str">`HTTP ${response.status}`</span>);
+  }
+  <span class="kw">const</span> data = <span class="kw">await</span> response.json();
+  <span class="kw">return</span> data;
+}</code></pre>
+        <div class="lab"><h3>จำลอง request โดยไม่ใช้ API key</h3><div class="controls"><select id="scenario"><option value="ok">200 · Success</option><option value="404">404 · Not Found</option><option value="500">500 · Server Error</option><option value="network">Network failure</option></select><select id="delay"><option value="500">เร็ว · 0.5s</option><option value="1600">ช้า · 1.6s</option></select><button class="primary" id="send">ส่ง Request</button></div><p class="status"><span class="dot" id="dot"></span><span id="statusText">ยังไม่ได้ส่ง</span></p><div class="console" id="fetchOutput">ผลลัพธ์จะแสดงที่นี่</div></div>
+        <div class="insight"><strong>Insight</strong> การแสดง loading ไม่ใช่ของตกแต่ง แต่เป็นสัญญาระหว่างระบบกับผู้ใช้ว่า event ถูกจับแล้ว งานกำลังคืบหน้า และไม่ควรกดซ้ำ</div>
+      </section>
+
+      <section id="errors" class="panel"><div class="eyebrow">05 · Resilience</div><h2><code>fetch()</code> ไม่ reject เมื่อเจอ 404 หรือ 500</h2><p class="lead">Promise จะ reject เมื่อ request ไปไม่ถึงปลายทาง เช่น network ขาด หรือถูก block แต่ HTTP error ยังถือว่า server ตอบกลับสำเร็จในเชิงเครือข่าย จึงต้องตรวจ <code>response.ok</code> เอง</p>
+        <div class="grid"><div class="card"><h3>Network error</h3><p>ไม่มี HTTP response ให้ตรวจ มักเข้า <code>catch</code> โดยตรง ควรแจ้งให้ลองใหม่และเก็บข้อมูล input ไว้</p></div><div class="card"><h3>HTTP error</h3><p>มี status เช่น 401, 404, 429, 500 อ่าน body เพื่อหาข้อความที่เหมาะสม แล้ว <code>throw</code> เพื่อหยุด success path</p></div></div>
+        <pre><button class="copy">คัดลอก</button><code><span class="kw">async function</span> <span class="fn">requestJSON</span>(url) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw">await</span> fetch(url);
+    <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="str">`HTTP ${res.status}`</span>);
+    <span class="kw">return await</span> res.json();
+  } <span class="kw">catch</span> (error) {
+    <span class="comment">// อัปเดต UI ให้ผู้ใช้รู้ว่าจะทำอะไรต่อได้</span>
+    showError(error.message);
+    <span class="kw">throw</span> error;
+  }
+}</code></pre>
+        <div class="quiz" data-answer="c"><strong>ตรวจความเข้าใจ</strong><p>Server ตอบ 404 การเขียน <code>fetch(url).catch(...)</code> อย่างเดียวเพียงพอหรือไม่</p><label><input type="radio" name="q2" value="a"> เพียงพอ เพราะ status ที่ไม่ใช่ 200 reject เสมอ</label><label><input type="radio" name="q2" value="b"> เพียงพอเฉพาะ JSON</label><label><input type="radio" name="q2" value="c"> ไม่พอ ต้องตรวจ response.ok หรือ status ก่อน</label><button class="primary quiz-btn">ตรวจคำตอบ</button><div class="feedback" aria-live="polite"></div></div>
+      </section>
+
+      <section id="dom" class="panel"><div class="eyebrow">06 · Data to interface</div><h2>อย่าให้ JSON shape กลายเป็นกับดัก</h2><p class="lead">API มักส่ง object ซ้อน array การเข้าถึง <code>data.data[0].description</code> ทำงานได้ แต่ควรตรวจว่าทุกชั้นมีข้อมูล และอย่าถือว่าสมาชิกตัวแรกดีที่สุดเสมอ</p>
+        <pre><button class="copy">คัดลอก</button><code><span class="kw">const</span> parks = payload.data ?? [];
+<span class="kw">const</span> park = parks[Math.floor(Math.random() * parks.length)];
+
+<span class="kw">if</span> (park) {
+  parkName.textContent = park.fullName;
+  parkName.href = park.url;
+  parkDescription.textContent = park.description;
+  parkSection.classList.remove(<span class="str">"hidden"</span>);
+}</code></pre>
+        <div class="grid"><div class="card"><h3><code>textContent</code></h3><p>เหมาะกับข้อความจาก API เพราะไม่ตีความเป็น HTML จึงลดความเสี่ยงจากการแทรก script เมื่อเทียบกับ <code>innerHTML</code></p></div><div class="card"><h3><code>DOMContentLoaded</code></h3><p>รับประกันว่า element ที่จะเลือกมีอยู่แล้ว แต่ถ้าวาง script ก่อนปิด <code>&lt;/body&gt;</code> หรือใช้ <code>defer</code> ก็ลดการพึ่ง event นี้ได้</p></div></div>
+        <label class="check"><input type="checkbox" class="task"><span>ฉันเลือก property จาก JSON และอธิบาย path ของข้อมูลแต่ละชั้นได้</span></label><label class="check"><input type="checkbox" class="task"><span>ฉันอัปเดตข้อความ ลิงก์ ค่า form และ class ของ DOM ได้อย่างเหมาะสม</span></label>
+      </section>
+
+      <section id="challenge" class="panel"><div class="eyebrow">07 · Capstone</div><h2>ภารกิจ National Park Spotlight</h2><p class="lead">สร้าง component ที่โหลดอุทยานตามรัฐ แสดงหนึ่งรายการแบบสุ่ม และทำให้ผู้ใช้เห็นทุกสถานะของระบบ</p>
+        <div class="grid"><div class="card"><h3>เกณฑ์ผ่านพื้นฐาน</h3><ol><li>สร้าง request URL ด้วย <code>URL</code> และ <code>URLSearchParams</code></li><li>มี loading, success, empty และ error state</li><li>ตรวจ <code>response.ok</code></li><li>แสดงชื่อ ลิงก์ และคำอธิบายด้วย DOM API</li></ol></div><div class="card"><h3>เกณฑ์วิเคราะห์เชิงลึก</h3><ol><li>อธิบายว่า key ควรอยู่ client หรือ server</li><li>ป้องกัน request ซ้ำหรือ race condition</li><li>เสนอวิธีทดสอบ 200, 404, 429 และ offline</li><li>อธิบายเหตุผลที่ไม่ใช้ <code>innerHTML</code></li></ol></div></div>
+        <div class="insight danger"><strong>กับดักการออกแบบ</strong> ถ้าผู้ใช้เปลี่ยนรัฐเร็วมาก response เก่าอาจกลับมาทีหลังและทับผลล่าสุด ลองค้นเรื่อง <code>AbortController</code> เพื่อยกเลิก request ก่อนหน้า</div>
+        <h3>Definition of Done</h3><label class="check"><input type="checkbox" class="task"><span>เปิดผ่าน HTTP server และไม่มี error ใน Console</span></label><label class="check"><input type="checkbox" class="task"><span>ทดลองอย่างน้อย 4 สถานะ ได้แก่ success, empty, HTTP error และ offline</span></label><label class="check"><input type="checkbox" class="task"><span>ส่ง repository พร้อม README ที่ระบุ endpoint, data path และข้อจำกัดของ API</span></label>
+      </section>
+      <p class="footer">DTI201 · ภาค 1/2569 · Section 700001<br>เนื้อหาพัฒนาตามลำดับการเรียน JavaScript Ajax and Fetch พร้อมเสริมมุมมอง full-stack และความปลอดภัย<br><a href="https://github.com/LinkedInLearning/JavaScript-Ajax-and-Fetch-3809063/tree/main" target="_blank" rel="noopener noreferrer">Repository ประกอบรายวิชาใน GitHub</a> · ไฟล์นี้ทำงานแบบ standalone และเปิดออฟไลน์ได้</p>
+    </main>
+  </div>
+  <script>
+    const completed = new Set();
+    function updateProgress(){const total=6;document.querySelector('#progress').style.width=`${Math.min(100,completed.size/total*100)}%`;document.querySelector('#score').textContent=`กิจกรรม ${completed.size}/${total}`}
+    document.querySelectorAll('.task').forEach((el,i)=>el.addEventListener('change',()=>{el.checked?completed.add('t'+i):completed.delete('t'+i);updateProgress()}));
+    document.querySelectorAll('.quiz-btn').forEach((btn,i)=>btn.addEventListener('click',()=>{const q=btn.closest('.quiz'),picked=q.querySelector('input:checked'),out=q.querySelector('.feedback');if(!picked){out.textContent='เลือกคำตอบก่อน';out.className='feedback bad-text';return}const ok=picked.value===q.dataset.answer;out.textContent=ok?'ถูกต้อง เหตุผลสำคัญอยู่ที่การแยกการขอข้อมูลออกจากการโหลดหน้า':'ยังไม่ถูก ลองย้อนดู mental model และเส้นทางของ response';out.className='feedback '+(ok?'ok-text':'bad-text');if(ok){completed.add('q'+i);updateProgress()}}));
+    document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',async()=>{await navigator.clipboard.writeText(b.parentElement.innerText.replace('คัดลอก','').trim());b.textContent='คัดลอกแล้ว';setTimeout(()=>b.textContent='คัดลอก',1200)}));
+    document.querySelector('#buildUrl').addEventListener('click',()=>{const u=new URL('https://developer.nps.gov/api/v1/parks');u.search=new URLSearchParams({stateCode:document.querySelector('#state').value,limit:document.querySelector('#limit').value,api_key:'YOUR_KEY'});document.querySelector('#urlOutput').textContent=u.toString()+'\n\nสังเกตว่า URLSearchParams จัดการเครื่องหมาย ? & และการ encode ให้';completed.add('url');updateProgress()});
+    const sample={total:'2',data:[{fullName:'Yosemite National Park',states:'CA',url:'https://www.nps.gov/yose/',description:'ตัวอย่างข้อมูลที่ผ่าน response.json() แล้ว'},{fullName:'Joshua Tree National Park',states:'CA',url:'https://www.nps.gov/jotr/',description:'ข้อมูลจำลองสำหรับฝึกโดยไม่เปิดเผย API key'}]};
+    document.querySelector('#send').addEventListener('click',()=>{const type=document.querySelector('#scenario').value,delay=+document.querySelector('#delay').value,btn=document.querySelector('#send'),dot=document.querySelector('#dot'),status=document.querySelector('#statusText'),out=document.querySelector('#fetchOutput');btn.disabled=true;dot.className='dot loading';status.textContent='กำลังรอ response… UI ส่วนอื่นยังใช้งานได้';out.textContent='Promise อยู่ในสถานะ pending';setTimeout(()=>{btn.disabled=false;if(type==='ok'){dot.className='dot ok';status.textContent='สำเร็จ · response.ok = true';out.textContent='HTTP 200\nResponse → response.json() → JavaScript object\n\n'+JSON.stringify(sample,null,2);completed.add('fetch');updateProgress()}else if(type==='network'){dot.className='dot bad';status.textContent='ล้มเหลวระดับเครือข่าย · Promise rejected';out.textContent='TypeError: Failed to fetch\n→ เข้า catch โดยไม่มี HTTP status'}else{dot.className='dot bad';status.textContent=`ตอบกลับ HTTP ${type} · response.ok = false`;out.textContent=`fetch resolved พร้อม Response status ${type}\n→ ต้องตรวจ response.ok แล้ว throw Error เอง`} },delay)});
+    const links=[...document.querySelectorAll('.nav a')],sections=[...document.querySelectorAll('main section')];const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -65%'});sections.forEach(s=>observer.observe(s));
+  </script>
+</body>
+</html>

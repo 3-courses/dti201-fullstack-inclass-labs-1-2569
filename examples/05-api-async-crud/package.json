@@ -1,0 +1,15 @@
+{
+  "name": "dti201-api-async-crud",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env server.mjs",
+    "start:offline": "node server.mjs --offline",
+    "reset": "node scripts/reset-data.mjs",
+    "test": "node scripts/smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=20.6"
+  }
+}

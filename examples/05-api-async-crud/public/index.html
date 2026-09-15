@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DTI201 API Recovery Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">DTI201 · Chapter 4 recovery lab</p>
+      <h1>Async JavaScript → HTTP → JSON CRUD</h1>
+      <p>ทำนายลำดับการทำงาน อ่านข้อมูลจริงจาก NPS แล้วสร้าง แก้ไข และลบ reading note</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="async-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Checkpoint A</p>
+            <h2 id="async-title">Asynchronous และ Promise</h2>
+          </div>
+          <button id="run-async" type="button">Run trace</button>
+        </div>
+        <p>ทำนายก่อนกด: synchronous log, Promise microtask, timer และ <code>await</code> จะออกลำดับใด</p>
+        <ol id="async-log" class="console" aria-live="polite"></ol>
+      </section>
+
+      <section aria-labelledby="parks-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Checkpoint B · READ</p>
+            <h2 id="parks-title">National Park Service API</h2>
+          </div>
+          <form id="park-search" class="inline-form">
+            <label>
+              State code
+              <input id="state-code" name="stateCode" value="CA" maxlength="2" required />
+            </label>
+            <label>
+              Limit
+              <input id="park-limit" name="limit" type="number" value="6" min="1" max="20" />
+            </label>
+            <button type="submit">GET parks</button>
+          </form>
+        </div>
+        <p id="park-status" class="status" role="status">ยังไม่ได้ส่ง request</p>
+        <div id="park-list" class="card-grid"></div>
+      </section>
+
+      <section aria-labelledby="notes-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Checkpoint C · CREATE / READ / UPDATE / DELETE</p>
+            <h2 id="notes-title">Park reading notes</h2>
+          </div>
+          <button id="reload-notes" class="secondary" type="button">GET notes</button>
+        </div>
+
+        <form id="note-form" class="note-form">
+          <label>
+            Park
+            <select id="note-park" name="parkCode" required>
+              <option value="acad" data-name="Acadia National Park">Acadia National Park</option>
+            </select>
+          </label>
+          <label>
+            Note (อย่างน้อย 10 ตัวอักษร)
+            <textarea id="note-text" name="text" minlength="10" required></textarea>
+          </label>
+          <button type="submit">POST note</button>
+        </form>
+
+        <p id="note-status" class="status" role="status">กำลังโหลด notes…</p>
+        <ul id="note-list" class="note-list"></ul>
+      </section>
+
+      <section aria-labelledby="contract-title">
+        <p class="eyebrow">API contract</p>
+        <h2 id="contract-title">Method ต้องตรงกับเจตนา</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Intent</th><th>Method + endpoint</th><th>Success</th></tr></thead>
+            <tbody>
+              <tr><td>Create</td><td><code>POST /api/notes</code></td><td><code>201</code> + JSON</td></tr>
+              <tr><td>Read</td><td><code>GET /api/notes</code></td><td><code>200</code> + JSON</td></tr>
+              <tr><td>Update</td><td><code>PATCH /api/notes/:id</code></td><td><code>200</code> + JSON</td></tr>
+              <tr><td>Delete</td><td><code>DELETE /api/notes/:id</code></td><td><code>204</code> ไม่มี body</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>เปิด DevTools → Network แล้วตรวจ method, status, request payload และ response ทุกครั้ง</footer>
+  </body>
+</html>

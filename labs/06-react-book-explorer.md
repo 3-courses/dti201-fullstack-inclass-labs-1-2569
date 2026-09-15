@@ -4,6 +4,8 @@
 
 หลังจากเข้าใจ HTML, CSS, JavaScript และ JSON แล้ว เราค่อยย้ายเข้าสู่ React เพื่อจัด UI เป็น component
 
+อ่านคู่กับหนังสือฉบับเต็ม Chapter 5 หน้าที่พิมพ์ 47–54: Vite, component, props, state, derived data, stable key, routing และโครงสร้าง frontend ห้ามข้าม Chapter 4 core เพราะ React เปลี่ยนวิธี render แต่ไม่เปลี่ยน Promise/HTTP contract
+
 ## สร้างโปรเจกต์
 
 ```bash

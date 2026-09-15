@@ -4,6 +4,8 @@
 
 เปลี่ยนจาก in-memory data เป็นข้อมูลที่อยู่ต่อหลัง restart server
 
+อ่านคู่กับหนังสือฉบับเต็ม Chapters 9–10 เรื่องการออกแบบข้อมูล, query, SQL/repository และ persistence แล้วแปล schema จากตัวอย่างในหนังสือมาเป็น `Book` และ `ReadingNote`
+
 เลือก database ตามที่ผู้สอนกำหนด เช่น SQLite, PostgreSQL, MongoDB หรือ file-based storage สำหรับ MVP
 
 ## Data model

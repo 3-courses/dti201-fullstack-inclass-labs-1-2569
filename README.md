@@ -15,7 +15,7 @@ lab ชุดนี้ใช้พร้อมกับการบรรยา�
 | 2 | 02 | จากหนังสือจริงสู่ semantic HTML | [labs/02-real-book-semantic-html.md](labs/02-real-book-semantic-html.md) |
 | 3 | 03 | CSS layout, responsive design และ accessibility | [labs/03-book-page-css-responsive.md](labs/03-book-page-css-responsive.md) |
 | 4 | 04 | JavaScript, DOM, event และ form validation | [labs/04-book-form-javascript-validation.md](labs/04-book-form-javascript-validation.md) |
-| 5 | 05 | HTTP, JSON, fetch และ curl | [labs/05-book-json-fetch-curl.md](labs/05-book-json-fetch-curl.md) |
+| 5 | 05 | Chapter 4 recovery: async/Promise, HTTP, NPS API, JSON CRUD และ curl | [labs/05-book-json-fetch-curl.md](labs/05-book-json-fetch-curl.md) |
 | 6 | 06 | React/Vite: เปลี่ยนหน้า book page เป็น app | [labs/06-react-book-explorer.md](labs/06-react-book-explorer.md) |
 | 7 | 07 | React forms, effects และ API service layer | [labs/07-react-forms-api-service.md](labs/07-react-forms-api-service.md) |
 | 8 | 08 | Midterm practical แบบ AI-off | [labs/08-midterm-ai-off-practical.md](labs/08-midterm-ai-off-practical.md) |
@@ -27,6 +27,10 @@ lab ชุดนี้ใช้พร้อมกับการบรรยา�
 | 14 | 14 | Learning Journey Dataset และ RAG readiness | [labs/14-learning-journey-rag-dataset.md](labs/14-learning-journey-rag-dataset.md) |
 | 15 | 15 | Performance, resource use, sustainability และ polish | [labs/15-performance-sustainability-polish.md](labs/15-performance-sustainability-polish.md) |
 | 16 | 16 | Final demo, oral defense และ handoff | [labs/16-final-demo-oral-defense.md](labs/16-final-demo-oral-defense.md) |
+
+### Chapter 4 recovery kit
+
+Lab 05 มีชุดช่วยสอนที่รันได้จริงใน [`examples/05-api-async-crud/`](examples/05-api-async-crud/), [คู่มือผู้สอน](docs/05-api-recovery-instructor-guide.md) และ [แผนเชื่อมหนังสือฉบับเต็มกับ Lab 05–10](docs/book-api-react-lab-alignment.md) ครอบคลุม async/Promise, NPS API แบบไม่เปิดเผย key, JSON CRUD, failure drill และ React bridge แบบ optional
 
 
 

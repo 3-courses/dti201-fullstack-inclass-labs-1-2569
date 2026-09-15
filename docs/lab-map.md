@@ -10,7 +10,7 @@
 | 02 | `labs/02-real-book-semantic-html.md` | หนังสือจริง → semantic HTML |
 | 03 | `labs/03-book-page-css-responsive.md` | CSS, responsive, accessibility |
 | 04 | `labs/04-book-form-javascript-validation.md` | JavaScript, DOM, event, validation |
-| 05 | `labs/05-book-json-fetch-curl.md` | JSON, fetch, curl |
+| 05 | `labs/05-book-json-fetch-curl.md` | Chapter 4 recovery: async/Promise, NPS GET, JSON CRUD, Fetch diagnosis |
 | 06 | `labs/06-react-book-explorer.md` | React/Vite prototype |
 | 07 | `labs/07-react-forms-api-service.md` | React form, effects, API service |
 | 08 | `labs/08-midterm-ai-off-practical.md` | AI-off midterm checkpoint |

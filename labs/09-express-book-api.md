@@ -4,6 +4,8 @@
 
 เริ่ม backend อย่างเป็นระบบ: health endpoint, routing, middleware, validation และ error response ที่สม่ำเสมอ
 
+อ่านคู่กับหนังสือฉบับเต็ม Chapter 8 โดยแปล resource จาก Campus Coffee Queue (`orders`) เป็น Course Book Explorer (`books`/`reading-notes`) แต่รักษา method, status และ error contract เดิม
+
 ## โครงสร้าง
 
 ```text
