@@ -113,12 +113,21 @@ git check-ignore -v .env
 git status --short
 ```
 
-ผลต้องไม่แสดง `.env` เป็นไฟล์ที่จะ commit จากนั้นเริ่ม server:
+ผลต้องไม่แสดง `.env` เป็นไฟล์ที่จะ commit จากนั้นเริ่ม server ใน **terminal ที่หนึ่ง**
+โดยยังอยู่ใน `examples/05-api-async-crud` (ไม่ต้อง `npm install` เพราะใช้เฉพาะ API ที่มากับ Node.js):
 
 ```bash
 npm start
 ```
 
+ผลที่ควรเห็นเมื่อใช้ค่า `PORT=3000`:
+
+```text
+DTI201 API lab: http://127.0.0.1:3000
+NPS mode: live API
+```
+
+**ปล่อย terminal นี้รันค้างไว้** ระหว่างทำทุก checkpoint; ถ้ากด `Ctrl+C` server จะหยุด
 เปิด `http://127.0.0.1:3000` และเปิด DevTools → Console + Network
 
 ถ้า NPS หรือเครือข่ายใช้ไม่ได้ ห้ามปิด TLS verification ให้หยุด server ด้วย `Ctrl+C` แล้วใช้:
@@ -184,10 +193,77 @@ try {
 
 ## Checkpoint 2 — อ่าน API contract ด้วย HTTP client (25 นาที)
 
-เปิด terminal ที่สองและตรวจ health endpoint:
+### URL นี้เชื่อมกับ server ตัวไหน?
+
+`127.0.0.1` คือ loopback ของเครื่องที่รันคำสั่ง (ชื่อ `localhost` มักชี้กลับมาที่เครื่องเดียวกัน)
+ส่วน `3000` คือ port ที่ **Node.js server จาก Checkpoint 0** รอรับ HTTP request
+การเปิดหน้า GitHub หรือไฟล์ HTML อย่างเดียวไม่ได้เริ่ม server นี้
+ใน lab นี้ให้ใช้ `127.0.0.1` ตามตัวอย่าง เพราะ scaffold bind ไว้ที่ IPv4 address นี้
+
+เปิด [package.json](../examples/05-api-async-crud/package.json) และ
+[server.mjs](../examples/05-api-async-crud/server.mjs) แล้วไล่เส้นทาง:
+
+```text
+terminal 1: npm start
+  → node --env-file=.env server.mjs
+  → server.listen(port, "127.0.0.1")       port จาก PORT; ค่าเริ่มต้น 3000
+
+browser / terminal 2 → http://127.0.0.1:3000 → Node.js process เดียวกัน
+  /                    → public/index.html
+  /app.js              → public/app.js
+  /health              → JSON ยืนยันว่า local server ทำงาน
+  /api/parks           → NPS API หรือ data/nps-parks.sample.json ใน offline mode
+  /api/notes           → อ่าน/เขียน data/notes.json
+```
+
+เมื่อเปิดหน้าเว็บจาก `http://127.0.0.1:3000/` แล้วเรียก `fetch("/api/notes")`
+browser จะส่งไปที่ `http://127.0.0.1:3000/api/notes` เพราะใช้ origin เดียวกับหน้าเว็บ
+อย่าเปิด `public/index.html` ด้วย `file://` หรือ Live Server อีก port สำหรับ checkpoint นี้
+
+### ตรวจว่า server พร้อมก่อนเรียก API
+
+ถ้า terminal ที่หนึ่งยังแสดงข้อความเริ่ม server จาก Checkpoint 0 ให้ใช้ตัวเดิมต่อได้เลย
+ถ้ายังไม่ได้เริ่มหรือปิดไปแล้ว ให้เปิด terminal ที่ root ของ repository แล้วรัน:
+
+```bash
+cd examples/05-api-async-crud
+npm run start:offline
+```
+
+วิธีนี้ทดสอบ local server ได้โดยไม่ต้องมี NPS key หรือ `.env` และควรเห็น:
+
+```text
+DTI201 API lab: http://127.0.0.1:3000
+NPS mode: offline sample
+```
+
+`start:offline` ไม่อ่าน `.env`; ใช้ port 3000 ถ้าไม่มี `PORT` ใน environment ของ terminal
+ให้ใช้ port ที่แสดงในข้อความเริ่ม server กับทุก URL และบันทึกว่าใช้ offline sample
+ถ้าจะกลับไปใช้ live NPS ให้หยุดด้วย `Ctrl+C` แล้วรัน `npm start` ตาม Checkpoint 0
+อย่ารันสอง server บน port เดียวกันพร้อมกัน
+
+เปิด **terminal ที่สองบนเครื่องเดียวกับ server** โดยปล่อย terminal ที่หนึ่งทำงานอยู่
+แล้วตรวจ health endpoint ก่อน:
 
 ```bash
 curl -i http://127.0.0.1:3000/health
+```
+
+ควรได้ `HTTP/1.1 200 OK`, `Content-Type: application/json; charset=utf-8` และ body:
+
+```json
+{
+  "status": "ok",
+  "service": "dti201-api-lab",
+  "npsMode": "offline"
+}
+```
+
+ถ้ารัน `npm start` แบบ live ค่า `npsMode` จะเป็น `"live"`
+`/health` ตรวจเฉพาะ local server; ยังไม่ได้ยืนยันว่า NPS key หรืออินเทอร์เน็ตใช้ได้
+เมื่อ health ผ่านแล้วจึงเรียก parks และ notes:
+
+```bash
 curl -i "http://127.0.0.1:3000/api/parks?stateCode=CA&limit=2"
 curl -i http://127.0.0.1:3000/api/notes
 ```
@@ -199,6 +275,33 @@ Invoke-RestMethod http://127.0.0.1:3000/health
 Invoke-RestMethod 'http://127.0.0.1:3000/api/parks?stateCode=CA&limit=2'
 Invoke-RestMethod http://127.0.0.1:3000/api/notes
 ```
+
+ถ้าต้องการเก็บ status และ headers ใน PowerShell ให้ใช้ `curl.exe -i` ตามตัวอย่าง curl
+เพราะ `Invoke-RestMethod` แสดง body ที่แปลงเป็น object เป็นหลัก
+
+### ถ้าเชื่อมต่อไม่ได้
+
+| อาการ | ตรวจและแก้อย่างไร |
+|---|---|
+| `Failed to connect` / `ERR_CONNECTION_REFUSED` | ดู terminal ที่หนึ่งว่า server ยังรันอยู่ และ host/port ตรงกับข้อความเริ่ม server; ถ้าหยุดแล้วให้เริ่มใหม่ตามขั้นตอนด้านบน |
+| `npm` หา `package.json` ไม่เจอ | กลับไป root ของ repo แล้ว `cd examples/05-api-async-crud` ก่อนรัน |
+| `.env` ไม่พบ หรือ `--env-file` ใช้ไม่ได้ | ทำ Checkpoint 0 ให้ครบและตรวจ Node.js 20.6+; ถ้าต้องการตรวจ local server ก่อน ให้ใช้ `npm run start:offline` |
+| `EADDRINUSE` | port ถูกใช้อยู่; ตรวจ `/health` ว่าเป็น `dti201-api-lab` หรือไม่ ถ้าใช่ให้ใช้ server เดิม ถ้าไม่ใช่ให้หยุด process ที่ตนเปิดไว้บน port นั้นก่อนเริ่ม lab server |
+| `/health` ได้ HTML หรือ `404` | อาจเรียกผิด server เช่น Live Server หรือ Python static server; ใช้ Node scaffold และ URL ที่แสดงใน terminal |
+| health ผ่าน แต่ parks ได้ error | local server ทำงานแล้ว ให้ตรวจ NPS key/เครือข่าย หรือเปลี่ยนเป็น offline mode; notes CRUD ไม่ต้องใช้ NPS |
+
+ถ้าใช้ SSH, VM หรือเครื่อง remote: `127.0.0.1` ใน browser บน laptop หมายถึง laptop
+ไม่ใช่เครื่องที่เปิด server ให้รัน curl ใน terminal ของเครื่อง remote เพื่อตรวจ health ก่อน
+แล้วใช้ port forwarding เพื่อเปิดหน้าเว็บจาก laptop เช่น รันคำสั่งนี้ใน terminal บน laptop
+โดยแทน `USER` และ `HOST` ด้วยบัญชีและ host ที่ใช้ SSH จริง:
+
+```bash
+ssh -N -L 3000:127.0.0.1:3000 USER@HOST
+```
+
+ปล่อย SSH tunnel ทำงานไว้ แล้วเปิด `http://127.0.0.1:3000` บน laptop
+ถ้าใช้ VS Code Remote ให้ forward port 3000 ผ่านแท็บ **Ports** แล้วเปิด URL ที่ VS Code ให้มา
+เมื่อจบ lab ให้หยุด server และ SSH tunnel ด้วย `Ctrl+C` ใน terminal ของแต่ละ process
 
 บันทึกหลักฐานให้ครบ:
 
