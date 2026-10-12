@@ -106,6 +106,38 @@ export default function App() {
 
 **เขียนในหนังสือ:** §5.4 “JSX ใช้ `{ }` เพื่อ…”; เริ่ม knowledge map `React → component → JSX → UI` พร้อมคำกริยาบนเส้น
 
+## Activity 1B — จาก JSX สู่ DOM tree (8 นาที)
+
+**DOM (Document Object Model)** คือโครงสร้าง object ของเอกสารในเบราว์เซอร์ Element node แทน tag และ text node เก็บข้อความ เส้นเชื่อมใน tree แสดงความสัมพันธ์ parent/child ภาพนี้ย่อเฉพาะ subtree ภายใน `div#root` และละ whitespace text nodes เพื่อให้อ่านง่าย
+
+<img src="../assets/lab06-react/dom-tree-v4.png" width="820" alt="DOM tree: div root มี main ซึ่งมี h1 และ p เป็นลูก และมี text nodes อยู่ใต้แต่ละ element" />
+
+**React element** เป็น object ที่อธิบาย type, props และ children ของ UI คำว่า **virtual DOM** ใช้เรียกแนวคิดตัวแทน UI ในหน่วยความจำ ภาพต่อไปเป็นแบบจำลองเพื่อเรียน ไม่ใช่ภาพโครงสร้างภายใน React ทั้งหมด และไม่ใช่ DOM อีกหน้าหนึ่งที่เบราว์เซอร์แสดง
+
+<img src="../assets/lab06-react/virtual-dom-v4.png" width="820" alt="ฝั่งซ้ายเป็นคำอธิบาย UI ของ React ฝั่งขวาเป็น browser DOM โดย commit เชื่อมทั้งสองฝั่ง" />
+
+**Render** คือ React เรียก components เพื่อคำนวณ UI; **commit** นำผลไปปรับ DOM ที่จำเป็น หากผลเหมือนเดิม อาจไม่ต้องแก้ DOM ในตัวอย่างที่โครงสร้างและ identity เดิมคงอยู่ ข้อความ Books: 5 เปลี่ยนเป็น Books: 6 โดยไม่สร้างทุก node ใหม่
+
+<img src="../assets/lab06-react/dom-update-v4.png" width="820" alt="เปรียบเทียบ UI ก่อนและหลัง โดยเน้นเฉพาะข้อความ Books ที่เปลี่ยนจาก 5 เป็น 6" />
+
+**ทำ:** เพิ่ม JSX นี้ภายใน main ของ App.tsx แล้วบันทึก:
+
+```tsx
+<section>
+  <h2>Featured</h2>
+  <p>Learning React</p>
+</section>
+```
+
+1. วาด tree ที่มี element และ text nodes ก่อนเปิด DevTools
+2. คลิกขวาที่ Featured เลือก Inspect แล้วขยาย section ในแท็บ Elements
+3. จับคู่ JSX กับ DOM ที่เห็น มี tag ชื่อ App หรือไม่? อธิบายว่าบทบาทของ component ต่างจาก DOM element อย่างไร
+4. เปลี่ยนชื่อหนังสือ แล้ววงตำแหน่งที่เปลี่ยนใน tree ของคุณ
+
+**ตรวจ:** อย่านับ text nodes เป็น component และอย่าคิดว่าเรียก component แล้วจะต้องแทนที่ DOM ทั้งต้น การ save ผ่าน Vite/HMR ใช้ตรวจโครงสร้างในกิจกรรมนี้ ไม่ใช่หลักฐานว่า node identity จะคงเดิมทุกครั้ง
+
+**เขียนในหนังสือ:** §5.4 วาด `JSX → React element → DOM` และกำกับหน้าที่ของแต่ละส่วน ใช้ [Render and Commit](https://react.dev/learn/render-and-commit), [createElement](https://react.dev/reference/react/createElement) และ [MDN DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) ทบทวน
+
 ## Activity 2 — Component เดียว ข้อมูลสองชุด (10 นาที)
 
 <img src="../assets/lab06-react/components-props.png" width="480" alt="หนึ่ง component รับ props ต่างกัน" />
@@ -200,6 +232,20 @@ function BookCard(props: BookCardProps) {
 
 **State** คือข้อมูลที่ component จำข้าม render; **Hook** เช่น useState เพิ่มความสามารถให้ component เรียก Hook ระดับบนสุดของ component ไม่เรียกใน if หรือ loop
 
+### จำด้วยร้านกาแฟ: ใบออร์เดอร์กับสมุดประจำเคาน์เตอร์
+
+<img src="../assets/lab06-react/props-state-cafe-v4.png" width="820" alt="Parent ส่งใบออร์เดอร์ props ให้ component ส่วน component จด state ในสมุดของตนเอง" />
+
+| ในร้านกาแฟ | ใน React | ใครเปลี่ยนได้? |
+|---|---|---|
+| ใบออร์เดอร์จากแคชเชียร์ | **Props**: inputs จาก parent เช่น book ที่ส่งให้ BookCard | parent ส่ง props ใหม่ได้; ลูกอ่านและไม่แก้ props เอง |
+| สมุดประจำเคาน์เตอร์ | **State**: ความจำของ component เช่น count ใน Counter | component ขอเปลี่ยนผ่าน setter |
+| ขอแก้ออร์เดอร์ | เรียก **callback** ที่ parent ส่งมา | parent ผู้เป็นเจ้าของ state ตัดสินใจอัปเดต |
+
+**ขอบเขตอุปมา:** props ไม่ได้คงเดิมตลอดไป และสมุด state ไม่ใช่ฐานข้อมูลถาวร การ reload หน้าอาจเริ่ม local state ใหม่ ถ้า parent เก็บ query ใน state แล้วส่งให้ลูก ค่าเดียวกันนั้นเป็น state ของ parent และเป็น props ของลูก
+
+**จำแล้วอธิบาย:** ชื่อหนังสือที่ BookCard รับมาเป็น “ใบออร์เดอร์” หรือ “สมุดของตนเอง”? จำนวนครั้งที่แต่ละ Counter จำไว้ล่ะ? ตอบพร้อมชื่อ component และผู้เป็นเจ้าของข้อมูล
+
 เพิ่ม import ไว้บนสุดของ App.tsx และเพิ่ม Counter นอก App:
 
 ```tsx
@@ -247,7 +293,7 @@ App
 
 **ทำ:** ตัดสินใจว่า query ควรอยู่ที่ใด เมื่อ BookFilters ต้องแสดงค่าที่พิมพ์ และ BookList ต้องแสดงผลจาก query เดียวกัน วาดลูกศรค่าที่ส่งลง และลูกศรการเรียก callback เพื่อขอเปลี่ยนค่า
 
-**ตรวจ:** อธิบายว่าทำไมไม่เก็บ query สองชุดในลูกสองตัว
+**ตรวจ:** อธิบายว่าทำไมไม่เก็บ query สองชุดในลูกสองตัว แล้วโยงอุปมา: สมุดของ BookPage ส่งข้อมูลบนใบออร์เดอร์ให้ BookFilters; query จึงเป็น state ของใคร และ props ของใคร?
 
 หลังวาดแล้วจึงเทียบกับ [ภาพเส้นทางข้อมูล](../assets/lab06-react/state-owner.png) ภาพใช้ข้อมูลต่างจาก lab; ให้ดูความสัมพันธ์ระหว่าง component
 
