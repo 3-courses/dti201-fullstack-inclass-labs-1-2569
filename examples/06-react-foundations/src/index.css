@@ -1,0 +1,9 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; color: #17324d; background: #fbf9f3; }
+main { max-width: 70rem; margin: auto; padding: 2rem; }
+section[aria-label="Books"] { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+article { border: 1px solid #a8c9ca; border-radius: 1rem; padding: 1.25rem; background: white; }
+button, input { font: inherit; padding: .6rem .9rem; margin: .4rem; }
+button { cursor: pointer; border: 1px solid #087f8c; border-radius: .4rem; }
+input { max-width: 100%; }
+:focus-visible { outline: 3px solid #b66b16; outline-offset: 3px; }
