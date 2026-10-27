@@ -38,7 +38,7 @@
 
 `.tsx` คือ TypeScript ที่เขียน JSX, `.ts` คือ TypeScript, `.js` คือ JavaScript ที่ Node.js รัน, และ `.json` คือข้อความข้อมูลหรือการตั้งค่า เซิร์ฟเวอร์ตัวอย่างเก็บข้อมูลในหน่วยความจำ เมื่อ restart ข้อมูลที่เพิ่มจะหาย; บทฐานข้อมูลจะทำให้เก็บถาวร
 
-ใช้ Node.js 20 ขึ้นไปและ npm. เปิด terminal ใน repository นี้:
+ใช้ Node.js 20 ขึ้นไปและ npm. โฟลเดอร์ `examples/09-express-book-api` มีอยู่แล้วใน repository ของ lab นี้ เป็นโปรเจกต์ Express แยกจากโปรเจกต์ React + Vite ที่ทำในบทก่อน **ไม่ต้องสร้างโฟลเดอร์ใหม่** หากกำลังทำงานในโปรเจกต์ React ให้เปิด terminal ใหม่ที่ root ของ repository lab นี้ แล้วรัน:
 
 ```bash
 cd examples/09-express-book-api
@@ -46,7 +46,7 @@ npm ci
 npm start
 ```
 
-ใช้ terminal อีกหน้าสำหรับ curl. `src/app.js` สร้างแอปโดยไม่เปิด port; `src/server.js` เปิด port; `src/books.js` เป็นข้อมูลในหน่วยความจำ. Restart server แล้วข้อมูลกลับเป็นค่าเริ่มต้น
+`npm ci` ติดตั้ง dependencies ตาม lockfile; `npm start` รัน `node src/server.js` ที่พอร์ต 3001. โปรเจกต์นี้ไม่มีคำสั่ง `npm run dev` แบบ Vite. ใช้ terminal อีกหน้าสำหรับ curl. `src/app.js` สร้างแอปโดยไม่เปิด port; `src/server.js` เปิด port; `src/books.js` เป็นข้อมูลในหน่วยความจำ. เมื่อแก้โค้ด ให้หยุดด้วย Ctrl+C แล้วรัน `npm start` ใหม่; ข้อมูลที่เพิ่มจะกลับเป็นค่าเริ่มต้น หากต้องส่งงานใน repository ส่วนตัว ให้คัดลอกโฟลเดอร์ starter นี้ไปทำใน repository ของตนเอง
 
 ## ข้อตกลง API
 
