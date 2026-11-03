@@ -1,7 +1,7 @@
 import express from 'express';
 import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
-import { createBookStore } from './books.js';
+import { createBookStore } from './book-store.js';
 
 export function createApp({ store = createBookStore(), logger = console } = {}) {
   const app = express();

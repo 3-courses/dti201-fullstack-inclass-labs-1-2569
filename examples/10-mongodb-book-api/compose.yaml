@@ -1,0 +1,9 @@
+services:
+  db:
+    image: mongo:7.0
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - book_mongodata:/data/db
+volumes:
+  book_mongodata:

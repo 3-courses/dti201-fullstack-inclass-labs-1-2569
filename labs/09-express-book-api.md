@@ -28,7 +28,7 @@
 - **JavaScript** คือภาษาที่เขียนโค้ด; **Node.js** รัน JavaScript ฝั่งเซิร์ฟเวอร์; **Express** ช่วยรับคำขอและเลือกฟังก์ชันที่จะตอบ
 - **คำขอ (request)** คือสิ่งที่เบราว์เซอร์ส่งไป เช่น `GET /api/books`; **คำตอบ (response)** มีรหัสสถานะ เช่น `200` และอาจมี JSON
 - **API** คือข้อตกลงว่าเรียกเส้นทางไหน ส่งข้อมูลอะไร และจะได้อะไรกลับมา
-- **route** คือกติกาจับคู่ method + path กับฟังก์ชัน; **middleware** คือขั้นตอนที่ทำงานก่อนหรือหลัง route เช่น อ่าน JSON
+- **route** คือการกำหนดว่า method + path ใดให้ฟังก์ชันใดตอบ; **middleware** คือขั้นตอนที่ทำงานก่อนหรือหลัง route เช่น อ่าน JSON
 
 ### รู้จักไฟล์และดูผลให้เป็น
 
@@ -174,6 +174,12 @@ curl -i 'http://localhost:3001/api/books?offset=-1'
 
 เขียนก่อนทดลองว่า `limit=0` จะได้อะไรถ้าไม่ตรวจ แล้วอธิบายว่าทำไมต้องปฏิเสธ
 
+### ใช้หนังสือ 200 เล่มเพื่อทดสอบการแบ่งหน้า
+
+เมื่อ GET กับการตรวจ `limit`/`offset` ทำงานกับข้อมูล 2 เล่มแล้ว ให้ใช้ [`books.js` ชุด 200 เล่ม](../examples/09-express-book-api/src/books.js) ที่ผู้สอนเตรียมไว้เป็น **ข้อมูลอย่างเดียว** ใน backend ที่คุณสร้างเอง คัดลอกไฟล์นี้มาเป็น `src/books.js`; ไม่ต้องคัดลอกโปรเจกต์ตัวอย่างหรือ route เฉลย ข้อมูลมี `id` 1–200 และฟิลด์ `title`, `author`, `sourceType`, `summary` เหมือนตัวอย่างเดิม
+
+ลองทำนายแล้วตรวจ `GET /api/books?limit=3&offset=0`, `offset=3` และ `offset=198`. แต่ละหน้าควรเห็นชื่อเล่มใด? เมื่อทำกิจกรรม POST ต่อ ให้สร้าง ID ใหม่จาก ID มากสุดบวก 1 จึงเริ่มที่ `201` ไม่ใช่ `3`
+
 ## Activity 3 — ID ผิดรูปกับหนังสือไม่พบ (10 นาที)
 
 แทน 501 ใน `GET /api/books/:id`. ยอมรับเฉพาะจำนวนเต็มบวกที่ปลอดภัย; `req.params.id` เป็นข้อความ. คืน 422 พร้อม `errors.id` สำหรับ `abc`, `0`, `1.5`; คืน 404 `Book not found` สำหรับ `999`; คืน 200 `{data:book}` สำหรับ `1`. ใช้ `books.find(book => book.id === id)` หลังตรวจ
@@ -255,6 +261,6 @@ export async function getBooks(): Promise<Book[]> {
 
 ส่งใน repository ส่วนตัว: โค้ด, ตารางคำขออย่างน้อย 10 กรณี (method/path/input → คาดว่า → status จริง → หลักฐาน), request ID จากข้อผิดพลาดหนึ่งกรณี, และ worksheet ที่เติมจากการทดลอง. เพิ่ม automated tests หากมีเวลา; curl เป็นหลักฐานขั้นต่ำ. อย่า commit `node_modules`, `.env`, ข้อมูลรับรอง หรือ log ที่มี body
 
-ตอบปากเปล่า: ทำไม backend ตรวจข้อมูลซ้ำหลัง frontend? อะไรเป็นกฎธุรกิจ (ชื่อซ้ำ) และอะไรเป็นการตรวจรูปแบบ? ทำไม ID ผิดรูปได้ 422 แต่ ID ไม่พบได้ 404? ถ้า store เปลี่ยนเป็น PostgreSQL ในบทถัดไป ข้อตกลง HTTP ใดควรคงเดิม?
+ตอบปากเปล่า: ทำไม backend ตรวจข้อมูลซ้ำหลัง frontend? อะไรเป็นกฎธุรกิจ (ชื่อซ้ำ) และอะไรเป็นการตรวจรูปแบบ? ทำไม ID ผิดรูปได้ 422 แต่ ID ไม่พบได้ 404? ถ้าเปลี่ยนจาก array เป็น MongoDB ในบทถัดไป ข้อตกลง HTTP ใดควรคงเดิม และ ID จะเปลี่ยนอย่างไร?
 
 แหล่งอ่าน: [Express routing](https://expressjs.com/en/guide/routing.html), [middleware](https://expressjs.com/en/guide/using-middleware.html), [Express 5 error handling](https://expressjs.com/en/5x/guide/error-handling/).
