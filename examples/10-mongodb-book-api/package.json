@@ -12,8 +12,11 @@
     "db:check": "node --env-file=.env scripts/check-db.js",
     "db:up": "docker compose up -d --wait --wait-timeout 120 db",
     "db:stop": "docker compose stop db",
-    "test": "node --test test/model.test.js",
-    "test:integration": "node --test test/database.test.js"
+    "test": "node --test test/model.test.js test/app.test.js",
+    "test:integration": "node --test test/database.test.js",
+    "demo:seed": "node --env-file=.env demo/sample-db.js --seed",
+    "demo:inspect": "node --env-file=.env demo/sample-db.js",
+    "demo:drinks": "node --env-file=.env demo/drinks.js"
   },
   "dependencies": {
     "express": "^5.1.0",

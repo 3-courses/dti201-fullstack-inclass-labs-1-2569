@@ -1,64 +1,51 @@
-# Lab 10 — MongoDB Atlas starter
+# Lab 10 — ตัวอย่างสมบูรณ์ MongoDB Atlas + Express + React
 
-เริ่มที่ [ใบงาน Lab 10 ภาษาไทย](../../labs/10-book-database-crud.md) และ [คู่มือ data model ร้านหนังสือ](../../docs/lab10-book-data-model.md) ใช้ **Atlas Free Cluster0 ของตนเอง** เป็นหลัก Docker เป็นทางเลือก ไม่ต้องรันทั้งสองทาง
+เริ่มจาก [คู่มือภาษาไทยตั้งแต่ดู sample DB](../../labs/10-book-database-crud.md) มีโค้ดครบทุกขั้น ไม่มี TODO หรือ route 501 คำสั่งด้านล่างใช้ทบทวนหลังอ่านคู่มือ ไม่แทนขั้นตั้ง Atlas ในช่วง 1
 
-## 1. เตรียม backend นี้
+## ลำดับคู่มือ
 
-ใช้ Node.js 20.6+ จากราก repo:
+1. [Atlas account, database user, IP access list, URI และข้อมูลตัวอย่าง](../../docs/lab10/01-atlas-and-sample.md)
+2. [อ่าน model/query ด้วยเครื่องดื่มสองรายการ](../../docs/lab10/02-drinks-walkthrough.md)
+3. [ER ทั้งสามภาพ → reference และ embedded documents](../../docs/lab10-book-data-model.md)
+4. [Book schema/store/API CRUD พร้อมคำอธิบายและ curl](../../docs/lab10/03-book-api-walkthrough.md)
+5. [React ตั้งแต่เปิด terminal ถึงเพิ่ม/แก้/ลบและตรวจ Atlas](../../docs/lab10/04-react-and-checks.md)
+
+ใช้ Node.js 22.12+ สำหรับทั้ง backend และ client จากโฟลเดอร์นี้ สร้าง .env จาก .env.example ถ้ายังไม่มี แล้วตั้ง URI จริงของ Cluster0 ของตน ห้ามคัดลอกทับ .env เดิม
 
 ```bash
-cd examples/10-mongodb-book-api
-cp .env.example .env
 npm ci
-```
-
-ถ้ามี `.env` แล้ว ให้แก้ไฟล์เดิม ไม่คัดลอกทับ สามารถคัดลอกโฟลเดอร์นี้ทั้งโฟลเดอร์ไป repo งานของตนได้ seed อยู่ใน `src/books.js` ไม่ต้องมีโฟลเดอร์ Lab 09 อยู่ข้าง ๆ
-
-## 2. ตั้ง Atlas ก่อนรัน
-
-เปิด Cluster0 → Connect → Drivers คัดลอก **hostname ของตน** ใส่ใน `.env` พร้อม database user/password และฐาน `course_books` เพิ่ม IP เครื่องที่รัน Express ใน Atlas IP access list ดูรายละเอียดและ URL encoding ในใบงาน อย่าใช้รหัสผ่านเข้าเว็บ Atlas แทน database user
-
-```bash
 npm run db:check
-npm run seed
-npm run seed
-npm run db:check
-npm run dev
-```
-
-ผ่าน ping ก่อน seed ฐานใหม่ควรมี 200 เล่มหลัง seed ทั้งสองครั้ง ตรวจ document ใน Atlas → Browse Collections → course_books → books
-
-## 3. จุดที่คุณต้องแก้
-
-| ไฟล์ | สิ่งที่ทำ |
-|---|---|
-| `.env` | ใส่ URI ส่วนตัว; ห้าม commit |
-| `src/models/Book.js` | อ่าน schema ที่มีให้และเขียน DataDictionary |
-| `src/book-store.js` | เติม `LAB10-LIST`, `LAB10-FIND`, `LAB10-INSERT` ตามขั้น 4 |
-| `src/server.js` | แทน `LAB10-ROUTES` ด้วย routes จาก Lab 09 ของตน; await store; เปลี่ยน ID validation; จัดการ errors ตามขั้น 5–6 |
-
-เปิดอีก terminal: `curl -i http://localhost:3001/health` ควรได้ 200 แต่ `/api/books` **ยังตอบ 501** จนกว่าคุณเขียนกิจกรรม ไม่ใช่ DB เสีย ตรวจความสำเร็จด้วย GET/POST และ POST → restart → GET ตามใบงาน ไม่ใช้ health อย่างเดียว
-
-## ทางเลือก Docker
-
-ใช้เมื่อไม่ใช้ Atlas: เปิด Docker แล้วเปลี่ยน `.env` เป็น `MONGODB_URI=mongodb://127.0.0.1:27018/course_books` จากนั้น:
-
-```bash
-docker info
-docker compose version
-docker compose config --quiet
-npm run db:up
-docker compose ps
-npm run db:check
+npm run demo:seed
+npm run demo:drinks
+npm run demo:inspect
 npm run seed
 npm run seed
 npm run dev
 ```
 
-`db:up` รอ healthcheck ก่อน seed ใช้ Compose v2 ที่รองรับ `--wait` หาก port ชน เปลี่ยน `MONGO_PORT` และ port ใน URI พร้อมกัน ดูตารางแก้ปัญหาในใบงาน
+demo ใช้ฐาน **course_books_demo** ส่วน API ใช้ **course_books** บัญชี DB ต้องมีสิทธิ์ทั้งสองฐาน โค้ดตัวอย่างร้านเต็มใน demo ใช้สำหรับอ่าน model และความสัมพันธ์ ไม่ได้เปิด checkout API
 
-## หยุดและตรวจ scaffold
+เปิด terminal อีกหน้าจากโฟลเดอร์นี้:
 
-หยุด Express ด้วย Ctrl+C ถ้าใช้ Docker ให้ `npm run db:stop` เพื่อเก็บ volume ห้ามใช้ `down -v` เมื่อต้องการเก็บข้อมูล Atlas ไม่ต้องมีคำสั่ง Docker
+```bash
+cd client
+npm ci
+npm run dev
+```
 
-`npm test` ตรวจ model โดยไม่ใช้ DB ส่วน `npm run test:integration` ต้องมี local MongoDB ที่ 127.0.0.1:27018 (ปรับด้วย `LAB10_TEST_URI`) ชุดทดสอบสร้างและลบเฉพาะฐานชั่วคราวชื่อสุ่ม `course_books_lab10_test_*` และไม่อ่าน `.env` ของคุณ การทดสอบนี้ตรวจ scaffold ไม่ได้ตรวจ GET/POST ที่คุณต้องเขียน
+เปิด http://127.0.0.1:5174/ Express อยู่ port 3001 ถ้าเปลี่ยน PORT ให้แก้ target ใน client/vite.config.js ด้วย ทุก route ของ /api/books มีให้ครบ GET list/detail, POST, PATCH, DELETE แอปฝึกยังไม่มี login ให้ใช้กับเครื่องและฐานของตนตามคู่มือ
+
+## Docker ทางเลือก
+
+หากไม่ใช้ Atlas ให้เปิด Docker เปลี่ยน .env เป็น `MONGODB_URI=mongodb://127.0.0.1:27018/course_books` แล้ว `npm run db:up` เพื่อรอ healthy ก่อนทำคำสั่งด้านบน อ่านวิธีเปลี่ยน port/ตรวจ logs ในใบงาน หยุดด้วย `npm run db:stop` ไม่ใช้ down -v
+
+## ตรวจโค้ด
+
+```bash
+npm test
+npm run test:integration
+```
+
+integration ใช้ local MongoDB 127.0.0.1:27018 (เปลี่ยนด้วย LAB10_TEST_URI) สร้าง/ลบเฉพาะฐานชื่อสุ่ม course_books_lab10_test_* ไม่อ่าน .env ของผู้เรียน ตรวจ seed แบบคัดลอกแยกโฟลเดอร์, ไม่ทับข้อมูลเดิม, CRUD จริง และ POST/PATCH → restart process → GET เดิม
+
+จาก client ใช้ `npm run build` ตรวจการสร้าง frontend

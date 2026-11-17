@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-export async function connectDatabase() {
+export async function connectDatabase(options = {}) {
   const uri = process.env.MONGODB_URI;
   if (!uri || /DB_USER|ENCODED_PASSWORD|YOUR_HOST/.test(uri)) {
     throw new Error('LAB10_CONFIG');
   }
-  await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+  await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000, ...options });
 }
 
 // Do not print driver error.message: it may contain a private host or URI.

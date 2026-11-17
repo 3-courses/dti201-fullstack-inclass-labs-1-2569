@@ -30,7 +30,7 @@ lab ชุดนี้ใช้พร้อมกับการบรรยา�
 
 ### เริ่ม Lab 10 ด้วย MongoDB Atlas
 
-ใช้ [ใบงาน Lab 10 แบบทีละขั้น](labs/10-book-database-crud.md) กับ **Free Cluster0 ของตนเอง** มี [starter](examples/10-mongodb-book-api/README.md), ตารางไฟล์ที่ต้องแก้, จุดตรวจ GET/POST และ [คู่มือ data model ร้านหนังสือ](docs/lab10-book-data-model.md) Docker เป็นทางเลือกพร้อม healthcheck และวิธีแก้ปัญหา
+ใช้ [ใบงาน Lab 10 แบบทีละขั้น](labs/10-book-database-crud.md) กับ **Free Cluster0 ของตนเอง** มี [starter](examples/10-mongodb-book-api/README.md), คำอธิบายส่วนประกอบ โค้ดครบทั้ง API/React และตัวอย่างฐานข้อมูลเล็กก่อนเริ่ม และ [คู่มือ data model ร้านหนังสือ](docs/lab10-book-data-model.md) Docker เป็นทางเลือกพร้อม healthcheck และวิธีแก้ปัญหา
 
 ### Chapter 4 recovery kit
 

@@ -21,7 +21,7 @@ function run(script, env, cwd = process.cwd()) {
   });
 }
 
-test('fresh database: portable seed, idempotence, index, restart and starter API', { timeout: 60000 }, async () => {
+test('fresh database: portable seed, idempotence, index, restart and complete CRUD API', { timeout: 60000 }, async () => {
   const base = process.env.LAB10_TEST_URI ?? 'mongodb://127.0.0.1:27018';
   // Override the database in the child URI too; never seed/drop the user's database.
   const dbName = `course_books_lab10_test_${randomUUID().replaceAll('-', '')}`;
@@ -62,11 +62,11 @@ test('fresh database: portable seed, idempotence, index, restart and starter API
     await once(socket, 'listening');
     const port = socket.address().port;
     await new Promise(resolve => socket.close(resolve));
-    const child = spawn(process.execPath, ['src/server.js'], { env: { ...process.env, ...env, PORT: String(port) } });
+    let child = spawn(process.execPath, ['src/server.js'], { env: { ...process.env, ...env, PORT: String(port) } });
     let output = '';
     child.stdout.on('data', chunk => { output += chunk; });
     child.stderr.on('data', chunk => { output += chunk; });
-    const closed = once(child, 'close');
+    let closed = once(child, 'close');
     try {
       const started = Date.now();
       while (!output.includes('API listening')) {
@@ -76,7 +76,43 @@ test('fresh database: portable seed, idempotence, index, restart and starter API
       }
       const url = `http://127.0.0.1:${port}`;
       assert.equal((await fetch(`${url}/health`)).status, 200);
-      assert.equal((await fetch(`${url}/api/books`)).status, 501);
+      const listResponse = await fetch(`${url}/api/books?limit=2&offset=0`);
+      assert.equal(listResponse.status, 200);
+      const list = await listResponse.json();
+      assert.equal(list.data.length, 2);
+      assert.equal(typeof list.data[0].id, 'string');
+      assert.equal('titleKey' in list.data[0], false);
+      const command = { title: 'Persistence Sample', author: 'Mali', sourceType: 'book', summary: 'Created through real HTTP' };
+      const send = (path, method, body) => fetch(url + path, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const created = await send('/api/books', 'POST', command);
+      assert.equal(created.status, 201);
+      const location = created.headers.get('location');
+      const data = (await created.json()).data;
+      assert.equal(location, `/api/books/${data.id}`);
+      assert.ok(await Book.findById(data.id));
+      assert.equal((await send('/api/books', 'POST', { ...command, title: ' persistence sample ' })).status, 409);
+      assert.equal((await send(location, 'PATCH', { title: first.title })).status, 409);
+      assert.equal((await send(location, 'PATCH', { summary: 'Updated through PATCH' })).status, 200);
+      child.kill('SIGTERM');
+      await closed;
+      output = '';
+      child = spawn(process.execPath, ['src/server.js'], { env: { ...process.env, ...env, PORT: String(port) } });
+      closed = once(child, 'close');
+      child.stdout.on('data', chunk => { output += chunk; });
+      child.stderr.on('data', chunk => { output += chunk; });
+      const restarted = Date.now();
+      while (!output.includes('API listening')) {
+        assert.equal(child.exitCode, null, output);
+        assert.ok(Date.now() - restarted < 10000, output);
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+      const persisted = await fetch(url + location);
+      assert.equal(persisted.status, 200);
+      assert.equal((await persisted.json()).data.summary, 'Updated through PATCH');
+      assert.equal((await send(location, 'DELETE')).status, 204);
+      assert.equal((await fetch(url + location)).status, 404);
+      assert.equal((await send(location, 'PATCH', { summary: 'Absent' })).status, 404);
+      assert.equal((await send(location, 'DELETE')).status, 404);
     } finally {
       child.kill('SIGTERM');
       await closed;
