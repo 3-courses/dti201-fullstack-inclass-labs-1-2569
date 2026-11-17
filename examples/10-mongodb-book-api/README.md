@@ -1,13 +1,13 @@
-# Lab 10 — ตัวอย่างสมบูรณ์ MongoDB Atlas + Express + React
+# Lab 10 — MongoDB Atlas + Express + React
 
-เริ่มจาก [คู่มือภาษาไทยตั้งแต่ดู sample DB](../../labs/10-book-database-crud.md) มีโค้ดครบทุกขั้น ไม่มี TODO หรือ route 501 คำสั่งด้านล่างใช้ทบทวนหลังอ่านคู่มือ ไม่แทนขั้นตั้ง Atlas ในช่วง 1
+เริ่มจาก [คู่มือภาษาไทยตั้งแต่ดู sample DB](../../labs/10-book-database-crud.md) ตั้งค่าการเชื่อมต่อในช่วง 1 ก่อนใช้คำสั่งด้านล่าง
 
 ## ลำดับคู่มือ
 
 1. [Atlas account, database user, IP access list, URI และข้อมูลตัวอย่าง](../../docs/lab10/01-atlas-and-sample.md)
 2. [อ่าน model/query ด้วยเครื่องดื่มสองรายการ](../../docs/lab10/02-drinks-walkthrough.md)
 3. [ER ทั้งสามภาพ → reference และ embedded documents](../../docs/lab10-book-data-model.md)
-4. [Book schema/store/API CRUD พร้อมคำอธิบายและ curl](../../docs/lab10/03-book-api-walkthrough.md)
+4. [Book schema/store/API CRUD และการส่งคำขอด้วย curl](../../docs/lab10/03-book-api-walkthrough.md)
 5. [React ตั้งแต่เปิด terminal ถึงเพิ่ม/แก้/ลบและตรวจ Atlas](../../docs/lab10/04-react-and-checks.md)
 
 ใช้ Node.js 22.12+ สำหรับทั้ง backend และ client จากโฟลเดอร์นี้ สร้าง .env จาก .env.example ถ้ายังไม่มี แล้วตั้ง URI จริงของ Cluster0 ของตน ห้ามคัดลอกทับ .env เดิม
@@ -33,7 +33,7 @@ npm ci
 npm run dev
 ```
 
-เปิด http://127.0.0.1:5174/ Express อยู่ port 3001 ถ้าเปลี่ยน PORT ให้แก้ target ใน client/vite.config.js ด้วย ทุก route ของ /api/books มีให้ครบ GET list/detail, POST, PATCH, DELETE แอปฝึกยังไม่มี login ให้ใช้กับเครื่องและฐานของตนตามคู่มือ
+เปิด http://127.0.0.1:5174/ Express อยู่ port 3001 ถ้าเปลี่ยน PORT ให้แก้ target ใน client/vite.config.js ด้วย API /api/books รองรับ GET list/detail, POST, PATCH, DELETE แอปฝึกยังไม่มี login ให้ใช้กับเครื่องและฐานของตนตามคู่มือ
 
 ## Docker ทางเลือก
 

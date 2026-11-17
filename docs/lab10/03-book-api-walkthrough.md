@@ -1,4 +1,4 @@
-# ช่วง 4 — ทำ Book API ด้วยโค้ดครบ แล้วทดลองทีละคำขอ
+# ช่วง 4 — เชื่อม Book model กับ API แล้วทดลองทีละคำขอ
 
 [กลับหน้า Lab 10](../../labs/10-book-database-crud.md) · ก่อนหน้า: [ER และ model](../lab10-book-data-model.md) · ถัดไป: [React](04-react-and-checks.md)
 
@@ -36,7 +36,7 @@ npm run db:check
 
 ## 4.4 เปิด Book model และอ่านกติกา
 
-ใน VS Code คลิก `src` → `models` → `Book.js` โค้ดมีให้ครบดังนี้ ไม่ต้องเติมบรรทัดเอง:
+ใน VS Code คลิก `src` → `models` → `Book.js` เพื่อดู field และเงื่อนไขของหนังสือ:
 
 ```js
 import mongoose from 'mongoose';
@@ -67,7 +67,7 @@ export const Book = mongoose.model('Book', bookSchema);
 
 ## 4.5 เปิด store: ส่วนที่คุยกับ model
 
-คลิก `src/book-store.js` คำว่า **store** ในตัวอย่างนี้คือกลุ่มฟังก์ชันที่เราเขียนเพื่ออ่าน/เพิ่ม/แก้/ลบ ไม่ใช่แพ็กเกจที่ต้องติดตั้งเพิ่ม มีโค้ดครบ:
+คลิก `src/book-store.js` คำว่า **store** หมายถึงกลุ่มฟังก์ชันสำหรับอ่าน/เพิ่ม/แก้/ลบข้อมูล ไฟล์นี้เรียก Book model แล้วแปลงผลเป็นข้อมูลที่ API ส่งออก:
 
 ```js
 import { Book } from './models/Book.js';
@@ -127,7 +127,7 @@ export function createBookStore() {
 
 ## 4.6 เปิด routes: ส่วนที่รับ HTTP
 
-คลิก `src/app.js` ภายในมี routes ครบแล้ว ไม่ต้องนำ TODO จาก Lab 09 มาเติม ตารางนี้อธิบายชื่อที่เห็นในโค้ด:
+คลิก `src/app.js` เพื่อดูว่าแต่ละ method และ URL เรียกฟังก์ชันใด ตารางนี้อธิบายชื่อที่ใช้ใน routes:
 
 | คำในโค้ด | หมายถึงอะไร |
 |---|---|
@@ -141,7 +141,7 @@ export function createBookStore() {
 | `readCommand` | ฟังก์ชันของเราเพื่อตรวจ field และชนิดข้อมูลก่อนส่งเข้า store |
 | `problem` | ฟังก์ชันตอบ error ในรูปแบบเดียวกัน |
 
-ตัวอย่าง GET list ที่มีให้ในไฟล์:
+ส่วนที่เรียก store และตอบ GET list:
 
 ```js
 const data = await store.list({ limit: take, offset: skip });
@@ -262,7 +262,7 @@ DELETE ของ API นี้ลบ metadata ในแอปฝึก ไม่
 
 ## 4.14 ดู error ที่โปรแกรมจัดการให้แล้ว
 
-รันคำสั่งเหล่านี้ทีละอันเพื่อรู้จักผล ไม่ต้องเขียน handler เพิ่ม:
+รันคำสั่งเหล่านี้ทีละอัน แล้วเทียบ HTTP status กับสาเหตุด้านล่าง:
 
 ```bash
 curl -i http://localhost:3001/api/books/1
@@ -274,4 +274,4 @@ curl -i -X POST http://localhost:3001/api/books -H 'Content-Type: application/js
 
 ผลตามลำดับคือ 422 (ID ผิดรูป), 404 (ID ถูกรูปแต่ไม่มี), 422 (limit นอกช่วง), 422 (field ไม่ครบ/ชื่อสั้น), 400 (JSON เสีย) ตัวอย่าง error body มี title/status/requestId ไม่ใช่ stack trace หรือ URI
 
-ตอนนี้ API ทำงานครบและอ่าน DB จริง ต่อที่ [ช่วง 5 เปิด React ใช้ API เดียวกัน](04-react-and-checks.md)
+ต่อที่ [ช่วง 5 เปิด React ใช้ API เดียวกัน](04-react-and-checks.md)

@@ -51,7 +51,7 @@ drinks: [
 
 MongoDB คือระบบที่เก็บข้อมูล ส่วน **Mongoose** คือไลบรารี JavaScript ใน Node.js ที่ช่วยกำหนดกติกาและสั่ง query จากโค้ด ไม่ใช่อีก database หนึ่ง
 
-เปิด `demo/Drink.js` ไฟล์นี้มีให้ครบแล้ว:
+เปิด `demo/Drink.js` เพื่อดูชนิดข้อมูลและเงื่อนไขของเครื่องดื่ม:
 
 ```js
 import mongoose from 'mongoose';
@@ -129,7 +129,7 @@ console.log(JSON.stringify({ data }, null, 2));
 
 `JSON.stringify` แปลง object เป็นข้อความ JSON `null, 2` ช่วยจัดย่อหน้าให้อ่านง่าย ยังไม่ได้ส่ง HTTP ขั้นนี้พิมพ์ผลใน terminal ก่อน เพื่อเห็นการอ่านฐานข้อมูลโดยไม่ต้องเข้าใจ route พร้อมกัน
 
-## 2.8 รันไฟล์นี้ด้วยคำสั่งที่เตรียมไว้
+## 2.8 รัน query และเทียบผลกับ Atlas
 
 ที่ terminal backend:
 
@@ -163,4 +163,4 @@ npm run demo:drinks
 | map document เป็นข้อมูลส่งออก | map เป็น API book ที่มี id string |
 | console.log แสดง JSON | Express ส่ง JSON ให้ React |
 
-ตอนนี้เราได้เห็นทุกส่วนทำงานกับข้อมูลเพียงสองรายการแล้ว ต่อไปจะขยายความเข้าใจเรื่องความสัมพันธ์ด้วย [ER ร้านหนังสือทั้งสามภาพ](../lab10-book-data-model.md)
+ต่อที่ [ER ร้านหนังสือทั้งสามภาพ](../lab10-book-data-model.md) เพื่ออ่านข้อมูลที่เชื่อมหลาย collection

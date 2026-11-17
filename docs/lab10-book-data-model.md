@@ -2,7 +2,7 @@
 
 [กลับหน้า Lab 10](../labs/10-book-database-crud.md) · ก่อนหน้า: [ตัวอย่างเครื่องดื่ม](lab10/02-drinks-walkthrough.md) · ถัดไป: [Book API](lab10/03-book-api-walkthrough.md)
 
-ช่วงนี้ใช้ข้อมูลที่ `npm run demo:seed` ใส่ไว้ใน `course_books_demo` แล้ว เราจะเปิดดู document ประกอบ ER ทีละความสัมพันธ์ ไม่ต้องออกแบบเองหรือเดาว่าควรสร้าง collection อะไร
+ใช้ข้อมูลที่ `npm run demo:seed` ใส่ไว้ใน `course_books_demo` เปิด Data Explorer ไว้เพื่อดู document ควบคู่กับความสัมพันธ์ใน ER
 
 ## 3.1 เริ่มจากเรื่องเล่าของลูกค้าหนึ่งคน
 
@@ -37,7 +37,7 @@
 4. **หมวดหมู่ → หนังสือ:** ตัวอย่างกำหนดหมวดหลักหนึ่งหมวดต่อรายการขาย หมวด Computing มีหนังสือสองเล่ม
 5. **ผู้เขียน ↔ หนังสือ:** หนังสือหนึ่งเล่มมีผู้เขียนร่วมหลายคนได้ และผู้เขียนคนหนึ่งมีหลายเล่มได้
 
-ภาพนี้ยังไม่เลือกว่าเก็บเป็นตาราง PostgreSQL หรือ document MongoDB เราเพิ่งกำลังอธิบายความหมายของข้อมูล
+แบบจำลองระดับแนวคิดระบุสิ่งที่ต้องเก็บและความสัมพันธ์ โดยยังไม่กำหนดชนิดข้อมูลหรือวิธีจัดเก็บของฐานข้อมูลใด
 
 ## 3.3 ภาพ 2: ระดับตรรกะ แยกสิ่งที่ต้องเก็บให้ชัด
 
@@ -232,12 +232,12 @@ npm run demo:inspect
 | ดูมาแล้วในฐาน demo | ทำต่อในฐานหลัก |
 |---|---|
 | books มี SKU/ราคา/stock/categoryId/authorIds | books มี title/author/sourceType/summary |
-| เพื่อเห็นความสัมพันธ์จาก ER ครบ | เพื่อเรียน HTTP → DB → React ครบ |
+| อ้างหมวดและผู้เขียนด้วย ID; ฝังรายการในตะกร้าและ order | ส่ง metadata สี่ field ระหว่าง React, API และ DB |
 | อ่านด้วย demo:inspect | เพิ่ม/อ่าน/แก้/ลบด้วย /api/books |
 | authorIds อ้างหลายผู้เขียน | author เป็นข้อความแสดงผลหนึ่ง field |
 
-การเลือกแบบง่ายในแอปหลักทำให้เรียนการต่อระบบได้ทีละเรื่อง ไม่ได้แปลว่า author string เทียบเท่าความสัมพันธ์ BOOK_AUTHOR และ API นี้ไม่รับ field ราคา/stock ถ้าเอา demo document มา POST ตรง ๆ จะถูกปฏิเสธด้วย 422
+`author` ในฐานหลักเก็บชื่อเป็นข้อความ จึงไม่สามารถอ้างถึงข้อมูลผู้เขียนร่วมแบบ BOOK_AUTHOR ได้ API ฐานหลักรับเฉพาะ title/author/sourceType/summary หากส่ง demo document ที่มีราคา/stock ไป POST จะได้ 422 เพราะมี field นอกเหนือจากที่ route อนุญาต
 
-ตอนนี้เห็นแล้วว่าความสัมพันธ์ของร้านเก็บเป็น document ได้อย่างไร ต่อไปใช้วิธี connect/model/query เดิมสร้าง [API หนังสือที่มีโค้ดครบ](lab10/03-book-api-walkthrough.md)
+ต่อที่ [เชื่อม Book model กับ API](lab10/03-book-api-walkthrough.md) เพื่ออ่านและเปลี่ยน metadata หนังสือผ่าน HTTP
 
 อ้างอิง: [MongoDB embedding และ references](https://www.mongodb.com/docs/manual/data-modeling/best-practices/), [Mongoose models](https://mongoosejs.com/docs/models.html)

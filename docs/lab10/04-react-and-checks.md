@@ -167,4 +167,4 @@ const body = await request(path, {
 
 กด Ctrl+C ใน A และ C เพื่อหยุด Express/Vite Atlas เก็บข้อมูลต่อโดยไม่ต้องเปิด terminal ค้าง ถ้าใช้ Docker ทางเลือก หยุด DB ที่ backend ด้วย `npm run db:stop` ไม่ใช้ down -v
 
-ตอนนี้มีเส้นทางที่ทำครบแล้ว: ต่อ Atlas → ดู sample DB → อ่าน model/query → เปิด API CRUD → เปิด React → ตรวจข้อมูลเดิมหลัง restart ทุกส่วนมีโค้ดให้และไม่มีขั้นที่ต้องเติมเอง
+หลังเปิดแอปครั้งถัดไป ให้รัน Express และ Vite จากโฟลเดอร์เดิม แล้วโหลดรายการหนังสือ ข้อมูลที่ยังไม่ได้ลบจะถูกอ่านกลับจาก MongoDB

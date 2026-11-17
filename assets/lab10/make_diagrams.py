@@ -59,3 +59,8 @@ render('restart-proof','พิสูจน์ว่าข้อมูลอย�
  arrow(330,280,390,280)+box(395,170,295,230,'2. ตรวจ Atlas',['ค้นหา title เดียวกัน','เห็น _id ของ document','เก็บใน course_books'])+
  arrow(690,280,750,280)+box(755,170,295,230,'3. Restart Express',['Ctrl+C ที่ server','npm run dev ใหม่','ไม่ลบ database'])+
  arrow(1050,280,1110,280)+box(1115,170,290,230,'4. GET id เดิม',['ตอบ 200','ชื่อและ id ตรงเดิม','โหลด React ใหม่ด้วย']))
+render('env-loading','จาก .env ผ่าน Node.js ไปเชื่อม MongoDB','ค่าของเครื่องอยู่ในไฟล์ตั้งค่า ส่วนคำสั่ง query อยู่ในโค้ด',
+ box(35,155,340,230,'.env ที่ backend',['MONGODB_URI=...','PORT=3001','ไม่เก็บรหัสจริงใน Git'])+
+ arrow(375,265,440,265)+box(445,155,480,230,'node --env-file=.env',['อ่านไฟล์ก่อนเริ่ม JavaScript','process.env.MONGODB_URI','process.env.PORT'])+
+ arrow(925,265,990,265)+box(995,155,410,230,'src/db.js เชื่อม MongoDB',['mongoose.connect(uri)','ใช้ URI ติดต่อฐานข้อมูล','Book model อ่าน/เขียนข้อมูล'])+
+ text(45,475,'.env.example แสดงชื่อค่าที่ต้องตั้ง; คำสั่งในแลบอ่านค่าจริงจาก .env',24))
