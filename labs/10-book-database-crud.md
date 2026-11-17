@@ -1,133 +1,111 @@
-# Lab 10 — ให้หนังสืออยู่ต่อด้วย MongoDB (MERN)
+# Lab 10 — สร้าง repo ของเรา แล้วเชื่อมแอปหนังสือกับ MongoDB Atlas
 
-อ่านหนังสือ DTI201 บทที่ 9 เรื่องข้อมูลที่คงอยู่, data model, ข้อจำกัด, index และ seed ประกอบ หนังสือใช้ PostgreSQL เป็นตัวอย่าง; Lab นี้ใช้ **MongoDB กับ Mongoose** ตาม MERN stack ของรายวิชา. ในหนังสือ “ตาราง/แถว/คีย์” ช่วยคิดแบบจำลอง แต่ในงานนี้เราสร้าง “collection/document/`_id`”
+เมื่อกรอกหนังสือผ่านหน้าเว็บ ข้อมูลต้องยังอยู่หลังปิดและเปิด Express ใหม่ เราจะสร้างโปรเจกต์ใน GitHub repository ของตนเอง ตั้งแต่ README และ .gitignore จนมี backend, frontend และประวัติ commit ของแต่ละช่วง
 
-## เมื่อจบคาบ
+![บทบาทของ React, Express และ MongoDB Atlas](../assets/lab10/component-roles.png)
 
-เพิ่มหนังสือด้วย `POST /api/books`, หยุดและเปิด Express ใหม่ แล้ว `GET /api/books` ยังพบเล่มเดิม หน้า React เดิมยังเรียกเส้นทาง API ได้ และคุณชี้ได้ว่าข้อมูลอยู่ใน MongoDB ไม่ใช่ array ใน Node.js
+**React** แสดงรายการและรับข้อมูลจากฟอร์ม **Express** รับ HTTP request ตรวจข้อมูล และเรียกฐานข้อมูล ส่วน **MongoDB** เก็บ document หนังสือไว้บน Atlas หน้าเว็บส่งคำขอไป Express และได้รับ JSON กลับมา ไม่เชื่อม Atlas โดยตรง
 
-ใช้ backend ที่ **คุณสร้างเองใน Lab 09** ต่อในโฟลเดอร์ `09-express-book-api`; ไม่ต้องสร้าง Express project ใหม่ ตัวอย่าง `examples/09-express-book-api/` ใน repository กลางยังมีบาง route ที่ตอบ `501`. หาก GET list และ POST ในงานของคุณยังไม่ทำงาน ให้ทำ Lab 09 สองส่วนนี้ให้เสร็จก่อน
+## เริ่มจาก GitHub repo ของตนเอง
 
-[สไลด์ MongoDB/MERN](../slide/10-mongodb-mern/mongodb-mern.pdf) แนะนำประเภทฐานข้อมูล ประวัติ MongoDB และความต่างจากตัวอย่าง PostgreSQL ในหนังสือ ดู [ชุดเริ่มต้น MongoDB](../examples/10-mongodb-book-api/README.md) เพื่อตรวจการเชื่อมต่อและ seed หนังสือ 200 เล่ม แล้วนำแนวคิดไปเพิ่มใน backend ที่คุณเขียนเอง ชุดเริ่มต้นตั้งใจให้ route หนังสือตอบ 501 จนกว่าจะทำกิจกรรม
+เปิด repo แลบนี้ใน browser เพื่ออ่านคำอธิบายและคัดลอกเนื้อหาไฟล์ตามลิงก์ ส่วนการสร้างไฟล์ รันคำสั่ง และ commit ทำใน repo `dti201-bookstore` ของเรา
 
-## กิจกรรม 0 — ทำนายและดูข้อมูลที่หาย (10 นาที)
+![จาก repo ของเราไปสู่การสร้างไฟล์ commit และ push](../assets/lab10/developer-workflow.png)
 
-รัน `npm run dev` แล้ว POST หนังสือหนึ่งเล่ม GET ให้เห็นเล่มนั้น หยุด Express ด้วย `Ctrl+C`, รันใหม่และ GET อีกครั้ง จดผล แล้วชี้ว่าข้อมูลเก็บอยู่ที่บรรทัดใดใน `src/books.js` หรือ route ของคุณ
+| ลำดับ | เปิดคู่มือ | สิ่งที่ลงมือทำ | ผลที่ควรเห็น |
+|---|---|---|---|
+| 0 | [สร้าง GitHub repo และ clone ลงเครื่อง](../docs/lab10/00-create-your-repository.md) | สร้าง README/.gitignore ตรวจ origin แล้ว commit/push | repo ของเรามี commit แรกจากเครื่อง |
+| 1 | [สร้าง backend ต่อ Atlas และดูข้อมูลตัวอย่าง](../docs/lab10/01-atlas-and-sample.md) | npm init ติดตั้งแพ็กเกจ สร้างไฟล์ connection/.env/demo | ping ผ่านและเห็น sample DB ใน Atlas |
+| 2 | [สร้าง model และ query เครื่องดื่ม](../docs/lab10/02-drinks-walkthrough.md) | สร้าง Drink.js และ drinks.js แล้วติดตามผล query | JSON ตรงกับเครื่องดื่มสองรายการใน Atlas |
+| 3 | [อ่าน ER ร้านหนังสือทั้งสามภาพ](../docs/lab10-book-data-model.md) | ติดตาม ID และรายการที่ฝังใน document | เห็นว่าลูกค้า ตะกร้า และคำสั่งซื้อเชื่อมกันอย่างไร |
+| 4 | [สร้าง Book model, seed และ API](../docs/lab10/03-book-api-walkthrough.md) | สร้างไฟล์ทีละส่วน ทดลอง GET/POST/PATCH/DELETE แล้ว commit | API อ่านและเปลี่ยนข้อมูลใน MongoDB |
+| 5 | [สร้าง frontend และต่อ API](../docs/lab10/04-react-and-checks.md) | npm init สร้างไฟล์ React แล้วเพิ่ม/แก้/ลบผ่านฟอร์ม | หน้าเว็บกับ Atlas แสดงข้อมูลเดียวกัน |
 
-คำถาม: `201 Created` ยืนยันว่ารับคำขอสำเร็จ แต่ยืนยันหรือไม่ว่าข้อมูลอยู่หลังโปรแกรมหยุด?
+แต่ละช่วงใช้เวลาต่อได้หลายคาบ ถ้าหยุดพัก ให้เก็บไฟล์ .env บนเครื่องไว้ และเริ่มต่อจาก commit ของเรา ไม่ต้องลบฐานข้อมูลหรือสร้าง repo ใหม่
 
-## กิจกรรม 1 — ออกแบบ document หนังสือ (15 นาที)
+## โฟลเดอร์งานของเราเมื่อทำถึงช่วงสุดท้าย
 
-| API JSON เดิม | MongoDB document | ความหมาย |
-|---|---|---|
-| `id: 3` | `_id: ObjectId(...)` | MongoDB สร้าง ID; API ส่ง `id` เป็นข้อความ |
-| `title` | `title` และ `titleKey` | ชื่อแสดงผลและชื่อที่ใช้ตรวจซ้ำ |
-| `author` | `author` | ผู้แต่งหรือผู้จัดทำ |
-| `sourceType` | `sourceType` | `book`, `documentation` หรือ `course` |
-| `summary` | `summary` | ข้อความที่เขียนเอง |
-
-เขียน `docs/DataDictionary.md` ระบุ field, type, required, source และ privacy note. `titleKey` เป็นค่าในฐานข้อมูลที่ route สร้างจาก `title.trim().toLocaleLowerCase()`; อย่ารับ `titleKey` จาก JSON ของผู้ใช้
-
-**การเปลี่ยน ID ที่ต้องรู้:** Lab 09 ใช้เลข `1`, `2`; MongoDB ใช้ ObjectId เช่น `674000000000000000000001`. `GET /api/books/:id` ยังเป็นเส้นทางเดิม แต่ `id` ใน response เป็น string. ID เลขเดิมใช้กับข้อมูลใหม่ไม่ได้. React example เดิมใช้ `id: string`, จึงไม่ต้องแปลงเลขเป็นข้อความอีก
-
-## กิจกรรม 2 — เปิด MongoDB และเชื่อมต่อ (20 นาที)
-
-ต้องมี Node.js 20 ขึ้นไป, npm และ Docker ที่ `docker compose version` กับ `docker info` ใช้ได้ หากเครื่องไม่มี Docker ให้ใช้ MongoDB ของห้องเรียนและขอ `MONGODB_URI` จากผู้สอน
-
-ในโฟลเดอร์ backend เดิม สร้าง `compose.yaml`:
-
-```yaml
-services:
-  db:
-    image: mongo:7.0
-    ports:
-      - "127.0.0.1:27018:27017"
-    volumes:
-      - book_mongodata:/data/db
-volumes:
-  book_mongodata:
+```text
+dti201-bookstore/
+├── README.md
+├── .gitignore
+├── backend/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── .env.example
+│   ├── .env                ค่าจริงบนเครื่อง ไม่อยู่ใน Git
+│   ├── src/
+│   │   ├── db.js
+│   │   ├── models/Book.js
+│   │   ├── books.js
+│   │   ├── book-store.js
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── scripts/
+│   └── demo/
+└── frontend/
+    ├── package.json
+    ├── package-lock.json
+    ├── index.html
+    ├── vite.config.js
+    └── src/
 ```
 
-ใช้ port 27018 บนเครื่องเพื่อหลีกเลี่ยง MongoDB ตัวอื่น. ฐานข้อมูลนี้เปิดเฉพาะเครื่องตนเองเพื่อฝึกในคาบ; อย่าเปิด port นี้สู่เครือข่ายภายนอก
+ไม่ต้องสร้างทุกไฟล์จากภาพนี้ทันที แต่ละช่วงจะระบุไฟล์ที่ต้องสร้างก่อนรัน พร้อมลิงก์เนื้อหาจาก GitHub แลบและตำแหน่งปลายทางใน repo เรา ตัวอย่างเช่น `examples/10-mongodb-book-api/src/db.js` บนเว็บ จะวางใน `backend/src/db.js` ของเรา
 
-สร้าง `.env.example`:
+เริ่มที่ [ช่วง 0 — สร้าง repo ของเรา](../docs/lab10/00-create-your-repository.md)
+
+## ฐานข้อมูลสองชุดบน Cluster0
+
+![ฐาน demo และฐานแอปหลักอยู่แยกกันบน Cluster0](../assets/lab10/atlas-tree.png)
+
+- **course_books_demo**: ตัวอย่างเครื่องดื่มและร้านหนังสือชุดเล็ก ใช้เปิดดู reference, embedded items และราคาตอนซื้อ
+- **course_books**: metadata หนังสือ 200 เล่มตั้งต้น ใช้กับ Book API และ React
+
+ชื่อ books มีในทั้งสองฐาน แต่หน้าที่ต่างกัน ฐาน demo มี SKU/ราคา/รหัสผู้เขียน ส่วนฐานหลักเก็บ title/author/sourceType/summary เพื่อแสดงรายการและสรุปแหล่งอ่าน ข้อมูลลูกค้าใน demo เป็นข้อมูลสมมติ ไม่มีการรับเงินจากหน้าเว็บนี้
+
+## ทางเลือก Docker สำหรับรัน MongoDB บนเครื่อง
+
+ใช้ Atlas เป็นเส้นทางหลัก หากต้องการใช้ MongoDB บนเครื่องแทน ให้ทำหลังสร้าง backend และ .env ในช่วง 1 แล้ว ข้อมูล Docker กับ Atlas เป็นคนละชุด
+
+1. เปิด Docker Desktop หรือ Docker Engine
+2. ที่ terminal `dti201-bookstore/backend` ตรวจว่า docker info และ docker compose version ทำงานได้
+3. ใน VS Code สร้าง `backend/compose.yaml` คัดลอกเนื้อหาจาก [compose.yaml](../examples/10-mongodb-book-api/compose.yaml) บนเว็บแลบแล้ว Save
+4. เพิ่มคำสั่งที่ backend:
+
+```bash
+npm pkg set 'scripts.db:up=docker compose up -d --wait --wait-timeout 120 db'
+npm pkg set 'scripts.db:stop=docker compose stop db'
+```
+
+5. แก้ backend/.env ให้เหลือ URI ที่ใช้งานเพียงบรรทัดเดียว:
 
 ```dotenv
 MONGODB_URI=mongodb://127.0.0.1:27018/course_books
+PORT=3001
+MONGO_PORT=27018
 ```
 
-คัดลอกเป็น `.env`, เพิ่ม `.env` ใน `.gitignore`, แล้วรัน:
+6. รันจาก backend:
 
 ```bash
-docker compose up -d db
+docker compose config --quiet
+npm run db:up
 docker compose ps
-docker compose exec db mongosh course_books --eval 'db.runCommand({ping:1})'
-npm install mongoose
+npm run db:check
 ```
 
-แก้ `npm run dev` ให้โหลด `.env` เช่น `node --env-file=.env --watch src/server.js`. ใน `src/server.js` ให้ `await mongoose.connect(process.env.MONGODB_URI, {serverSelectionTimeoutMS: 5000})` **ก่อน** `app.listen`; ถ้าขาด URI หรือเชื่อมไม่ได้ ต้องบอกข้อผิดพลาดใน terminal และไม่แสดงว่า API พร้อมแล้ว. ห้ามเขียน URI ของบริการจริงไว้ใน source หรือ log
+config สำเร็จจะไม่พิมพ์อะไร db:up รอ healthcheck ก่อนคืนคำสั่ง ps ต้องเห็น healthy และ db:check ต้องได้ Database ping: OK จึงทำ demo:seed หรือ seed ตามช่วงถัดไป
 
-## กิจกรรม 3 — สร้าง Book model และ seed (25 นาที)
+ถ้าเปิดไม่ได้ ให้ดู `docker compose logs --tail=60 db` หาก port 27018 ถูกใช้ เปลี่ยนทั้ง MONGO_PORT และ port ใน URI เป็น 27019 แล้วรัน db:up ใหม่ ไม่หยุด container ของงานอื่น
 
-สร้าง `src/models/Book.js` ด้วย Mongoose schema. กำหนด `title`, `author`, `sourceType`, `summary` เป็น string ที่ต้องมี; `title` ยาวอย่างน้อย 3, `sourceType` เลือกได้จากสามค่าข้างบน; เปิด `timestamps: true`. เพิ่ม `titleKey` เป็น string ที่ต้องมีและทำ unique index:
+Express รันบนเครื่องและเรียก `127.0.0.1:27018` ที่ส่งต่อไป port 27017 ใน container ไม่ใช้ `db:27017` เพราะ Express ไม่ได้อยู่ใน Compose network
 
-```js
-bookSchema.index({ titleKey: 1 }, { unique: true });
-```
-
-ตั้ง `titleKey = title.trim().toLocaleLowerCase()` ในชั้น store ก่อน create. เรียก `await Book.init()` ก่อน seed หรือรับ POST เพื่อรอให้ index พร้อม. `unique` ไม่ใช่ Mongoose validator; เมื่อชน index MongoDB จะคืน duplicate-key error
-
-สร้าง `scripts/seed.js` ที่เชื่อม MongoDB, รอ `Book.init()`, แล้วนำ [หนังสือ 200 เล่มจาก Lab 09](../examples/09-express-book-api/src/books.js) มาเป็น seed. คัดลอกไฟล์ข้อมูลไปไว้ใน backend ของตน หรือใช้ `src/books.js` ที่คุณคัดลอกไว้ใน Lab 09. สำหรับแต่ละเล่ม ให้ใช้ `title`, `author`, `sourceType`, `summary`; **ไม่ใช้เลข `id` เดิมเป็น MongoDB `_id`**. คำนวณ `titleKey` แล้วใช้ `updateOne({titleKey}, {$setOnInsert: book}, {upsert:true})` เพื่อให้รันซ้ำแล้วไม่เพิ่มเล่มเดิม. เพิ่ม npm script `seed` ให้โหลด `.env` แล้วรันไฟล์นี้. หลัง seed ตรวจจำนวนและชื่อ:
+ดูข้อมูลแทน Atlas Data Explorer ได้ด้วย:
 
 ```bash
-npm run seed
+docker compose exec db mongosh course_books_demo --eval 'db.drinks.find().toArray()'
 docker compose exec db mongosh course_books --eval 'db.books.countDocuments()'
-docker compose exec db mongosh course_books --eval 'db.books.find({}, {title:1}).limit(3).toArray()'
 ```
 
-ผลที่ต้องเห็นคือ 200 documents; รัน `npm run seed` ซ้ำแล้วจำนวนยังเป็น 200. ID ที่ MongoDB สร้างเป็น ObjectId ใหม่ จึงต้องอ่าน ID จริงจากผล GET หรือ `mongosh` ก่อนทดลอง GET detail
-
-## กิจกรรม 4 — เปลี่ยน GET ให้ดึงจาก MongoDB (25 นาที)
-
-Lab 09 ของคุณอาจใช้ `books.slice` และ `books.find` ตรงใน routes. สร้าง `src/book-store.js` เป็นชั้นกลางที่มี `list({limit,offset})`, `find(id)`, `insert(command)`. เริ่มจากสองฟังก์ชันอ่าน:
-
-- `list`: `Book.find().sort({_id:1}).skip(offset).limit(limit)`
-- `find`: `Book.findById(id)`; ทำหลัง route ตรวจว่า ID มีรูป `/^[0-9a-fA-F]{24}$/`
-
-routes ต้องเป็น `async` และ `await` ผล Mongoose. คงการตรวจ `limit`/`offset` จาก Lab 09. สร้างฟังก์ชันแปลง document เป็น API JSON เช่น `{id:String(doc._id), title:doc.title, author:doc.author, sourceType:doc.sourceType, summary:doc.summary}`; ไม่ส่ง `titleKey` หรือ `__v` ให้ client
-
-**จุดตรวจ:** GET list เห็น seed, GET detail ด้วย ID ที่ได้จริงเห็นหนึ่งเล่ม, ID รูปผิดได้ 422, ObjectId ถูกรูปแต่ไม่มีเล่มได้ 404. `/api/books/1` จาก Lab 09 เป็น ID รูปผิดในคาบนี้
-
-## กิจกรรม 5 — POST และพิสูจน์ข้อมูลคงอยู่ (25 นาที)
-
-คง validation ของ Lab 09: ตรวจชื่อ, ผู้แต่ง, ชนิดแหล่งข้อมูล, summary และปฏิเสธ field ที่ไม่อนุญาต. ให้ `insert(command)` สร้าง `titleKey` เองและเรียก `Book.create(...)`. ตอบ `201`, `{data:book}` และ `Location: /api/books/<id>`
-
-ส่งชื่อเดิมอีกครั้งโดยเปลี่ยนตัวพิมพ์เล็ก/ใหญ่ MongoDB unique index ควรปฏิเสธ. แปลง duplicate-key error `code === 11000` เป็น `409` แบบ problem JSON เดิม. การ `findOne` ตรวจชื่อก่อน create อย่างเดียวไม่รับประกันเมื่อสองคำขอมาพร้อมกัน
-
-```bash
-curl -i -X POST http://localhost:3001/api/books -H 'Content-Type: application/json' \
-  -d '{"title":"Database Practice","author":"Mali","sourceType":"course","summary":"สรุปจากการทดลองของฉัน"}'
-curl -i -X POST http://localhost:3001/api/books -H 'Content-Type: application/json' \
-  -d '{"title":"database practice","author":"Mali","sourceType":"course","summary":"ชื่อซ้ำ"}'
-```
-
-หยุด **เฉพาะ Express** แล้วรัน `npm run dev` ใหม่ GET ตาม `Location` ที่ได้รับ และตรวจ document เดียวกันใน `mongosh`. จด ID และผลก่อน/หลัง restart. อย่าใช้ `docker compose down -v` เพราะ `-v` ลบ volume ที่เก็บข้อมูล
-
-## กิจกรรม 6 — กลับไป React และตรวจความล้มเหลว (20 นาที)
-
-ถ้า Lab 09 ต่อ React/Vite แล้ว เปิดหน้าเดิมและดู DevTools → Network. เส้นทาง `/api/books` และรูป `{data:[...]}` คงเดิม; ตรวจว่า ID เป็น string และหน้า React แสดงเล่มที่เพิ่มหลัง restart Express. ถ้า service เดิมแปลง `id` จาก number เป็น string อยู่ ให้เอาการแปลงที่ไม่จำเป็นออก
-
-หยุด MongoDB ชั่วคราวด้วย `docker compose stop db` แล้วลอง GET. Client ควรได้ 500 แบบ problem JSON พร้อม request ID โดยไม่เห็น URI หรือรายละเอียดภายใน. เปิดกลับด้วย `docker compose start db`. ถ้าใช้ MongoDB ส่วนกลาง ให้ผู้สอนสาธิตการหยุดแทน
-
-## หลักฐานที่ส่ง
-
-1. Backend, `compose.yaml`, `.env.example`, Book model, seed script และ `docs/DataDictionary.md`; ไม่มี `.env` หรือข้อมูลรับรองจริง
-2. ตารางผลจริง: GET list, GET detail, POST สำเร็จ, POST ชื่อซ้ำ, ข้อมูลผิด, ID ผิดรูป, ID ไม่พบ, MongoDB หยุด
-3. POST → restart Express → GET พบ ID เดิม และ `mongosh` แสดง document เดียวกัน
-4. ภาพเส้นทาง React → Express → MongoDB → Express → React พร้อม status/JSON ที่ผู้ใช้เห็น
-
-**อธิบายปากเปล่า:** ข้อมูลเดิมหายเพราะอยู่ที่ไหน? `_id` ต่างจาก `id` ที่ API ส่งอย่างไร? Mongoose validation ต่างจาก MongoDB unique index อย่างไร? เหตุใด client ไม่ควรเห็นข้อความเชื่อมต่อ MongoDB?
-
-**ทำต่อเมื่อแกนหลักเสร็จ:** เพิ่ม ReadingNote ที่อ้าง `bookId`, update/delete note และออกแบบว่าจะเก็บ note แยก collection หรือฝังใน Book โดยอธิบายเหตุผลจากการใช้งานจริง
-
-เอกสารอ้างอิง: [Mongoose connections](https://mongoosejs.com/docs/connections.html), [Mongoose validation](https://mongoosejs.com/docs/validation.html), [MongoDB indexes](https://www.mongodb.com/docs/manual/core/index-unique/)
+หยุด DB ด้วย npm run db:stop ไม่ใช้ down -v เพราะลบ volume หลังตรวจแล้ว commit เฉพาะ compose.yaml และ package.json ไม่ commit .env

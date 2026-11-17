@@ -1,0 +1,36 @@
+name: Lab 10 database and student workflow
+on:
+  push:
+    paths: ['examples/10-mongodb-book-api/**', 'docs/lab10/**', 'labs/10-book-database-crud.md', '.github/workflows/lab10.yml']
+  pull_request:
+    paths: ['examples/10-mongodb-book-api/**', 'docs/lab10/**', 'labs/10-book-database-crud.md', '.github/workflows/lab10.yml']
+permissions:
+  contents: read
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: examples/10-mongodb-book-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: examples/10-mongodb-book-api/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: docker compose config --quiet
+      - run: npm run db:up
+      - run: npm run test:integration
+      - run: python3 test/student-workflow.py
+      - run: npm ci
+        working-directory: examples/10-mongodb-book-api/client
+      - run: npm run build
+        working-directory: examples/10-mongodb-book-api/client
+      - if: failure()
+        run: docker compose logs --tail=60 db
+      - if: always()
+        run: docker compose down

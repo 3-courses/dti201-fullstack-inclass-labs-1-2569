@@ -28,6 +28,10 @@ lab ชุดนี้ใช้พร้อมกับการบรรยา�
 | 15 | 15 | Performance, resource use, sustainability และ polish | [labs/15-performance-sustainability-polish.md](labs/15-performance-sustainability-polish.md) |
 | 16 | 16 | Final demo, oral defense และ handoff | [labs/16-final-demo-oral-defense.md](labs/16-final-demo-oral-defense.md) |
 
+### เริ่ม Lab 10 จาก repository ของตนเอง
+
+เริ่มจาก [สร้าง GitHub repo และ clone repo ของเรา](docs/lab10/00-create-your-repository.md) แล้วสร้าง backend และ frontend ทีละไฟล์ตาม [ใบงาน Lab 10](labs/10-book-database-crud.md) ใช้ **Atlas Free Cluster0 ของตนเอง** เปิดไฟล์อ้างอิงใน GitHub แลบเพื่อคัดลอกเฉพาะเนื้อหาที่ระบุ แต่ละช่วงมีผลที่ควรเห็นและจุด commit/push งาน
+
 ### Chapter 4 recovery kit
 
 Lab 05 มีชุดช่วยสอนที่รันได้จริงใน [`examples/05-api-async-crud/`](examples/05-api-async-crud/), [คู่มือผู้สอน](docs/05-api-recovery-instructor-guide.md) และ [แผนเชื่อมหนังสือฉบับเต็มกับ Lab 05–10](docs/book-api-react-lab-alignment.md) ครอบคลุม async/Promise, NPS API แบบไม่เปิดเผย key, JSON CRUD, failure drill และ React bridge แบบ optional
