@@ -1,51 +1,28 @@
-# Lab 10 — MongoDB Atlas + Express + React
+# ไฟล์อ้างอิง Lab 10 — MongoDB Atlas, Express และ React
 
-เริ่มจาก [คู่มือภาษาไทยตั้งแต่ดู sample DB](../../labs/10-book-database-crud.md) ตั้งค่าการเชื่อมต่อในช่วง 1 ก่อนใช้คำสั่งด้านล่าง
+เริ่มงานจาก [สร้าง GitHub repository ของตนเอง](../../docs/lab10/00-create-your-repository.md) แล้วสร้าง backend/frontend ตาม [ลำดับ Lab 10](../../labs/10-book-database-crud.md)
 
-## ลำดับคู่มือ
+โฟลเดอร์นี้เก็บเนื้อหาไฟล์ที่เปิดอ่านและคัดลอกทีละไฟล์จาก browser ตารางในแต่ละช่วงระบุว่าคัดลอกไฟล์ใด วางที่ไหนใน repo ของเรา และตรวจผลอย่างไร
 
-1. [Atlas account, database user, IP access list, URI และข้อมูลตัวอย่าง](../../docs/lab10/01-atlas-and-sample.md)
-2. [อ่าน model/query ด้วยเครื่องดื่มสองรายการ](../../docs/lab10/02-drinks-walkthrough.md)
-3. [ER ทั้งสามภาพ → reference และ embedded documents](../../docs/lab10-book-data-model.md)
-4. [Book schema/store/API CRUD และการส่งคำขอด้วย curl](../../docs/lab10/03-book-api-walkthrough.md)
-5. [React ตั้งแต่เปิด terminal ถึงเพิ่ม/แก้/ลบและตรวจ Atlas](../../docs/lab10/04-react-and-checks.md)
+| ไฟล์อ้างอิงที่นี่ | ตำแหน่งในงานนักศึกษา |
+|---|---|
+| src/, scripts/, demo/ | backend/src/, backend/scripts/, backend/demo/ |
+| .env.example | backend/.env.example |
+| compose.yaml (Docker ทางเลือก) | backend/compose.yaml |
+| client/index.html และ client/vite.config.js | frontend/index.html และ frontend/vite.config.js |
+| client/src/ | frontend/src/ |
 
-ใช้ Node.js 22.12+ สำหรับทั้ง backend และ client จากโฟลเดอร์นี้ สร้าง .env จาก .env.example ถ้ายังไม่มี แล้วตั้ง URI จริงของ Cluster0 ของตน ห้ามคัดลอกทับ .env เดิม
+package.json และ package-lock.json ของงานนักศึกษาสร้างด้วย npm init/install ตามคู่มือ ไม่คัดลอกทั้งโปรเจกต์หรือ clone repo แลบเป็นฐานงาน .env ของแต่ละคนสร้างใน backend และไม่ส่งขึ้น GitHub
 
-```bash
-npm ci
-npm run db:check
-npm run demo:seed
-npm run demo:drinks
-npm run demo:inspect
-npm run seed
-npm run seed
-npm run dev
-```
+## ลำดับเนื้อหา
 
-demo ใช้ฐาน **course_books_demo** ส่วน API ใช้ **course_books** บัญชี DB ต้องมีสิทธิ์ทั้งสองฐาน โค้ดตัวอย่างร้านเต็มใน demo ใช้สำหรับอ่าน model และความสัมพันธ์ ไม่ได้เปิด checkout API
+- [0. สร้าง repo, clone, สร้างไฟล์ และ commit/push](../../docs/lab10/00-create-your-repository.md)
+- [1. สร้าง backend, เข้าใจ .env, ต่อ Atlas และสร้าง sample DB](../../docs/lab10/01-atlas-and-sample.md)
+- [2. สร้าง Drink model และ query](../../docs/lab10/02-drinks-walkthrough.md)
+- [3. อ่าน ER และข้อมูลร้านหนังสือ](../../docs/lab10-book-data-model.md)
+- [4. สร้าง Book model และ HTTP API](../../docs/lab10/03-book-api-walkthrough.md)
+- [5. สร้าง React frontend และตรวจข้อมูล](../../docs/lab10/04-react-and-checks.md)
 
-เปิด terminal อีกหน้าจากโฟลเดอร์นี้:
+## ตรวจไฟล์อ้างอิง
 
-```bash
-cd client
-npm ci
-npm run dev
-```
-
-เปิด http://127.0.0.1:5174/ Express อยู่ port 3001 ถ้าเปลี่ยน PORT ให้แก้ target ใน client/vite.config.js ด้วย API /api/books รองรับ GET list/detail, POST, PATCH, DELETE แอปฝึกยังไม่มี login ให้ใช้กับเครื่องและฐานของตนตามคู่มือ
-
-## Docker ทางเลือก
-
-หากไม่ใช้ Atlas ให้เปิด Docker เปลี่ยน .env เป็น `MONGODB_URI=mongodb://127.0.0.1:27018/course_books` แล้ว `npm run db:up` เพื่อรอ healthy ก่อนทำคำสั่งด้านบน อ่านวิธีเปลี่ยน port/ตรวจ logs ในใบงาน หยุดด้วย `npm run db:stop` ไม่ใช้ down -v
-
-## ตรวจโค้ด
-
-```bash
-npm test
-npm run test:integration
-```
-
-integration ใช้ local MongoDB 127.0.0.1:27018 (เปลี่ยนด้วย LAB10_TEST_URI) สร้าง/ลบเฉพาะฐานชื่อสุ่ม course_books_lab10_test_* ไม่อ่าน .env ของผู้เรียน ตรวจ seed แบบคัดลอกแยกโฟลเดอร์, ไม่ทับข้อมูลเดิม, CRUD จริง และ POST/PATCH → restart process → GET เดิม
-
-จาก client ใช้ `npm run build` ตรวจการสร้าง frontend
+ชุดทดสอบใน test/ ใช้ตรวจไฟล์ต้นฉบับนี้ ได้แก่ npm test, npm run test:integration และ npm run build ใน client integration ใช้ MongoDB บนเครื่องและฐานชื่อสุ่ม course_books_lab10_test_* ไม่อ่าน .env ของนักศึกษา

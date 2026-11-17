@@ -1,86 +1,84 @@
-# Lab 10 — ทำความรู้จักฐานข้อมูล แล้วต่อแอปร้านหนังสือทีละขั้น
+# Lab 10 — สร้าง repo ของเรา แล้วเชื่อมแอปหนังสือกับ MongoDB Atlas
 
-วันนี้เราจะทำให้ข้อมูลหนังสือที่กรอกผ่านหน้าเว็บถูกบันทึกไว้จริง ปิด Express แล้วเปิดใหม่ ข้อมูลก็ยังอยู่ ใช้ **MongoDB Atlas Free Cluster0 ของตนเอง**
+เมื่อกรอกหนังสือผ่านหน้าเว็บ ข้อมูลต้องยังอยู่หลังปิดและเปิด Express ใหม่ เราจะสร้างโปรเจกต์ใน GitHub repository ของตนเอง ตั้งแต่ README และ .gitignore จนมี backend, frontend และประวัติ commit ของแต่ละช่วง
 
 ![บทบาทของ React, Express และ MongoDB Atlas](../assets/lab10/component-roles.png)
 
-ดูภาพจากซ้ายไปขวา: ผู้ใช้เปิดหน้าเว็บ ผู้รับคำขอช่วยตรวจและค้นหา แล้วจึงอ่านข้อมูลจากที่เก็บ ในแอปของเรา สามส่วนนี้คือ **React**, **Express**, และ **MongoDB** ตามลำดับ คำขอจาก React ผ่าน Express ก่อนถึง MongoDB และผลจากฐานข้อมูลถูกส่งกลับมาแสดงในหน้าเว็บ
+**React** แสดงรายการและรับข้อมูลจากฟอร์ม **Express** รับ HTTP request ตรวจข้อมูล และเรียกฐานข้อมูล ส่วน **MongoDB** เก็บ document หนังสือไว้บน Atlas หน้าเว็บส่งคำขอไป Express และได้รับ JSON กลับมา ไม่เชื่อม Atlas โดยตรง
 
-## เราจะใช้ไฟล์ไหน และทำตามลำดับอย่างไร
+## เริ่มจาก GitHub repo ของตนเอง
 
-เปิดตามลำดับด้านล่าง ตรวจผลของแต่ละคำสั่งก่อนทำขั้นถัดไป หากผลไม่ตรง ให้ดูวิธีตรวจข้อผิดพลาดในหัวข้อนั้น
+เปิด repo แลบนี้ใน browser เพื่ออ่านคำอธิบายและคัดลอกเนื้อหาไฟล์ตามลิงก์ ส่วนการสร้างไฟล์ รันคำสั่ง และ commit ทำใน repo `dti201-bookstore` ของเรา
 
-| ลำดับ | เปิดคู่มือ | สิ่งที่เราจะทำร่วมกัน | ผลเมื่อจบช่วง |
+![จาก repo ของเราไปสู่การสร้างไฟล์ commit และ push](../assets/lab10/developer-workflow.png)
+
+| ลำดับ | เปิดคู่มือ | สิ่งที่ลงมือทำ | ผลที่ควรเห็น |
 |---|---|---|---|
-| 1 | [เตรียมเครื่อง ต่อ Atlas และเปิดดูฐานตัวอย่าง](../docs/lab10/01-atlas-and-sample.md) | เปิด terminal ให้ถูกที่ ตั้ง `.env` รัน seed แล้วเปิด Data Explorer | เห็นเครื่องดื่ม 2 รายการและร้านหนังสือตัวอย่าง |
-| 2 | [ตัวอย่างเล็ก: เครื่องดื่มสองชนิด](../docs/lab10/02-drinks-walkthrough.md) | อ่าน document และติดตามโค้ด connect → model → query → JSON | รันสคริปต์แล้วเห็นข้อมูลเดียวกับ Atlas |
-| 3 | [อ่าน ER ทั้งสามภาพและแปลงเป็น MongoDB](../docs/lab10-book-data-model.md) | ไล่ลูกค้า ตะกร้า คำสั่งซื้อ หนังสือ หมวดหมู่ และผู้เขียนด้วยข้อมูลจริงชุดเล็ก | เข้าใจ reference, embedded items และราคาตอนซื้อ |
-| 4 | [เชื่อม Book model กับ API](../docs/lab10/03-book-api-walkthrough.md) | อ่าน model/store/routes ทีละส่วน ทดลอง GET/POST/PATCH/DELETE | GET/POST/PATCH/DELETE อ่านและเปลี่ยนข้อมูลใน MongoDB |
-| 5 | [เปิด React และติดตามข้อมูลจากฟอร์ม](../docs/lab10/04-react-and-checks.md) | เปิดหน้าเว็บ เพิ่ม แก้ ลบ แล้ว restart Express | หน้าเว็บและ Atlas แสดงข้อมูลเดียวกัน |
+| 0 | [สร้าง GitHub repo และ clone ลงเครื่อง](../docs/lab10/00-create-your-repository.md) | สร้าง README/.gitignore ตรวจ origin แล้ว commit/push | repo ของเรามี commit แรกจากเครื่อง |
+| 1 | [สร้าง backend ต่อ Atlas และดูข้อมูลตัวอย่าง](../docs/lab10/01-atlas-and-sample.md) | npm init ติดตั้งแพ็กเกจ สร้างไฟล์ connection/.env/demo | ping ผ่านและเห็น sample DB ใน Atlas |
+| 2 | [สร้าง model และ query เครื่องดื่ม](../docs/lab10/02-drinks-walkthrough.md) | สร้าง Drink.js และ drinks.js แล้วติดตามผล query | JSON ตรงกับเครื่องดื่มสองรายการใน Atlas |
+| 3 | [อ่าน ER ร้านหนังสือทั้งสามภาพ](../docs/lab10-book-data-model.md) | ติดตาม ID และรายการที่ฝังใน document | เห็นว่าลูกค้า ตะกร้า และคำสั่งซื้อเชื่อมกันอย่างไร |
+| 4 | [สร้าง Book model, seed และ API](../docs/lab10/03-book-api-walkthrough.md) | สร้างไฟล์ทีละส่วน ทดลอง GET/POST/PATCH/DELETE แล้ว commit | API อ่านและเปลี่ยนข้อมูลใน MongoDB |
+| 5 | [สร้าง frontend และต่อ API](../docs/lab10/04-react-and-checks.md) | npm init สร้างไฟล์ React แล้วเพิ่ม/แก้/ลบผ่านฟอร์ม | หน้าเว็บกับ Atlas แสดงข้อมูลเดียวกัน |
 
-ใช้เวลาได้หลายคาบ: ช่วง 1–2 ประมาณ 60–90 นาที ช่วง 3 ประมาณ 45–60 นาที ช่วง 4–5 ประมาณ 90–120 นาที หากหยุดพักกลางทาง ให้เก็บ `.env` ไว้บนเครื่องและเริ่มต่อจากหัวข้อเดิม ไม่ต้องลบฐานข้อมูล
+แต่ละช่วงใช้เวลาต่อได้หลายคาบ ถ้าหยุดพัก ให้เก็บไฟล์ .env บนเครื่องไว้ และเริ่มต่อจาก commit ของเรา ไม่ต้องลบฐานข้อมูลหรือสร้าง repo ใหม่
 
-## ตั้งชื่อให้ตรงกันก่อน
-
-เราใช้ **สอง database บน Cluster0 เดียวกัน** เพื่อไม่ปะปนตัวอย่างร้านเต็มกับข้อมูลที่แอปหลักใช้งาน:
-
-![Cluster0 มีฐานสาธิตและฐานแอปหลักแยกกัน](../assets/lab10/atlas-tree.png)
-
-- `course_books_demo`: ข้อมูลเล็กสำหรับอ่าน ER และตัวอย่างเครื่องดื่ม มี `drinks`, `customers`, `categories`, `authors`, `books`, `carts`, `orders`
-- `course_books`: ข้อมูลแอป Course Book Explorer มี `books` 200 เล่มเริ่มต้น แล้วเพิ่มหนังสือของเราผ่าน API ได้
-
-ชื่อ collection `books` มีในทั้งสอง database แต่ **โครงสร้างต่างกันตามวัตถุประสงค์** ตัวอย่างร้านเต็มมี SKU/ราคา/รหัสผู้เขียน ส่วนแอปหลักเริ่มจาก metadata สี่ field คือ title/author/sourceType/summary เพื่อเรียนเส้นทางเว็บถึงฐานข้อมูลให้ครบก่อน
-
-ข้อมูลใน course_books_demo เป็นข้อมูลสมมติสำหรับติดตามความสัมพันธ์จาก ER ส่วนหน้าเว็บใช้ course_books เพื่อจัดการรายการหนังสือ ไม่มีการรับเงินหรือสร้างคำสั่งซื้อจากหน้าเว็บ
-
-## ไฟล์ที่เปิดอ่านทีละส่วน
-
-จากราก repo จะพบโครงสร้างนี้ ไม่ต้องสร้าง Express project ใหม่:
+## โฟลเดอร์งานของเราเมื่อทำถึงช่วงสุดท้าย
 
 ```text
-examples/10-mongodb-book-api/
-├── .env.example       แบบฟอร์มค่าตั้งต้นที่ไม่มีรหัสจริง
-├── .env               ค่าของเครื่องเราเอง สร้างในขั้น 1 ห้าม commit
-├── package.json       ชื่อคำสั่ง npm และรายการแพ็กเกจ
-├── compose.yaml       ใช้เฉพาะทางเลือก Docker
-├── demo/
-│   ├── data.js        ชุดข้อมูลเล็กที่อธิบาย ER
-│   ├── sample-db.js   เพิ่ม/อ่านฐาน course_books_demo
-│   ├── Drink.js       model ตัวอย่างเครื่องดื่ม
-│   └── drinks.js      อ่านเครื่องดื่มแล้วแปลงเป็น JSON
-├── scripts/
-│   ├── check-db.js    ตรวจ connection และจำนวนหนังสือในฐานหลัก
-│   └── seed.js        เพิ่ม metadata หนังสือ 200 เล่ม
-├── src/
-│   ├── db.js          เปิด connection ไป MongoDB
-│   ├── models/Book.js กติกา document หนังสือ
-│   ├── book-store.js  อ่าน/เพิ่ม/แก้/ลบ document
-│   ├── app.js         HTTP routes และการตรวจข้อมูล
-│   └── server.js      เชื่อม DB แล้วเปิด Express
-└── client/            หน้า React ที่รันได้ครบ
+dti201-bookstore/
+├── README.md
+├── .gitignore
+├── backend/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── .env.example
+│   ├── .env                ค่าจริงบนเครื่อง ไม่อยู่ใน Git
+│   ├── src/
+│   │   ├── db.js
+│   │   ├── models/Book.js
+│   │   ├── books.js
+│   │   ├── book-store.js
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── scripts/
+│   └── demo/
+└── frontend/
+    ├── package.json
+    ├── package-lock.json
+    ├── index.html
+    ├── vite.config.js
+    └── src/
 ```
 
-เริ่มจาก [ทำความรู้จักและสร้างไฟล์ .env](../docs/lab10/01-atlas-and-sample.md#13-env-คืออะไร-และทำไมต้องแยกจากโค้ด) แล้วใส่ค่าการเชื่อมต่อ Atlas ของตน หากเปลี่ยน port Express ให้แก้ target ใน `client/vite.config.js` ให้ตรงกัน
+ไม่ต้องสร้างทุกไฟล์จากภาพนี้ทันที แต่ละช่วงจะระบุไฟล์ที่ต้องสร้างก่อนรัน พร้อมลิงก์เนื้อหาจาก GitHub แลบและตำแหน่งปลายทางใน repo เรา ตัวอย่างเช่น `examples/10-mongodb-book-api/src/db.js` บนเว็บ จะวางใน `backend/src/db.js` ของเรา
 
-เริ่มที่ [ช่วง 1: เตรียมเครื่องและดูฐานข้อมูลตัวอย่าง](../docs/lab10/01-atlas-and-sample.md)
+เริ่มที่ [ช่วง 0 — สร้าง repo ของเรา](../docs/lab10/00-create-your-repository.md)
 
-## หากต้องใช้ Docker แทน Atlas
+## ฐานข้อมูลสองชุดบน Cluster0
 
-นักศึกษาที่ใช้ Atlas อยู่แล้วข้ามส่วนนี้ได้ Docker เป็นอีกที่หนึ่งที่ใช้รัน MongoDB ข้อมูลบน Docker กับ Atlas เป็นคนละชุด แม้ตั้งชื่อ database เหมือนกัน
+![ฐาน demo และฐานแอปหลักอยู่แยกกันบน Cluster0](../assets/lab10/atlas-tree.png)
 
-1. เปิด Docker Desktop บน Windows/macOS หรือ Docker Engine บน Linux
-2. เปิด terminal ใน `examples/10-mongodb-book-api/` ตรวจว่า `compose.yaml` อยู่ในโฟลเดอร์นี้
-3. รันทีละบรรทัด:
+- **course_books_demo**: ตัวอย่างเครื่องดื่มและร้านหนังสือชุดเล็ก ใช้เปิดดู reference, embedded items และราคาตอนซื้อ
+- **course_books**: metadata หนังสือ 200 เล่มตั้งต้น ใช้กับ Book API และ React
+
+ชื่อ books มีในทั้งสองฐาน แต่หน้าที่ต่างกัน ฐาน demo มี SKU/ราคา/รหัสผู้เขียน ส่วนฐานหลักเก็บ title/author/sourceType/summary เพื่อแสดงรายการและสรุปแหล่งอ่าน ข้อมูลลูกค้าใน demo เป็นข้อมูลสมมติ ไม่มีการรับเงินจากหน้าเว็บนี้
+
+## ทางเลือก Docker สำหรับรัน MongoDB บนเครื่อง
+
+ใช้ Atlas เป็นเส้นทางหลัก หากต้องการใช้ MongoDB บนเครื่องแทน ให้ทำหลังสร้าง backend และ .env ในช่วง 1 แล้ว ข้อมูล Docker กับ Atlas เป็นคนละชุด
+
+1. เปิด Docker Desktop หรือ Docker Engine
+2. ที่ terminal `dti201-bookstore/backend` ตรวจว่า docker info และ docker compose version ทำงานได้
+3. ใน VS Code สร้าง `backend/compose.yaml` คัดลอกเนื้อหาจาก [compose.yaml](../examples/10-mongodb-book-api/compose.yaml) บนเว็บแลบแล้ว Save
+4. เพิ่มคำสั่งที่ backend:
 
 ```bash
-docker version
-docker info
-docker compose version
+npm pkg set 'scripts.db:up=docker compose up -d --wait --wait-timeout 120 db'
+npm pkg set 'scripts.db:stop=docker compose stop db'
 ```
 
-`docker version` ต้องแสดงทั้ง Client และ Server หากเชื่อม daemon ไม่ได้ ให้เปิด Docker ก่อน `compose` ต้องเป็น v2 ที่รองรับ `up --wait`
-
-4. เปิด `.env` เปลี่ยน `MONGODB_URI` เป็นด้านล่าง ให้เหลือ URI ที่ไม่ขึ้นต้นด้วย `#` เพียงบรรทัดเดียว:
+5. แก้ backend/.env ให้เหลือ URI ที่ใช้งานเพียงบรรทัดเดียว:
 
 ```dotenv
 MONGODB_URI=mongodb://127.0.0.1:27018/course_books
@@ -88,7 +86,7 @@ PORT=3001
 MONGO_PORT=27018
 ```
 
-5. รัน:
+6. รันจาก backend:
 
 ```bash
 docker compose config --quiet
@@ -97,33 +95,17 @@ docker compose ps
 npm run db:check
 ```
 
-`config --quiet` สำเร็จจะไม่พิมพ์อะไร `db:up` เปิด container และรอ healthcheck `ps` ควรแสดง `healthy` แล้ว `db:check` ควรได้ `Database ping: OK` ถึงจุดนี้จึงทำ seed ตามคู่มือช่วง 1 ได้
+config สำเร็จจะไม่พิมพ์อะไร db:up รอ healthcheck ก่อนคืนคำสั่ง ps ต้องเห็น healthy และ db:check ต้องได้ Database ping: OK จึงทำ demo:seed หรือ seed ตามช่วงถัดไป
 
-หาก `db:up` ไม่สำเร็จ ให้ดู:
+ถ้าเปิดไม่ได้ ให้ดู `docker compose logs --tail=60 db` หาก port 27018 ถูกใช้ เปลี่ยนทั้ง MONGO_PORT และ port ใน URI เป็น 27019 แล้วรัน db:up ใหม่ ไม่หยุด container ของงานอื่น
 
-```bash
-docker compose logs --tail=60 db
-```
+Express รันบนเครื่องและเรียก `127.0.0.1:27018` ที่ส่งต่อไป port 27017 ใน container ไม่ใช้ `db:27017` เพราะ Express ไม่ได้อยู่ใน Compose network
 
-ถ้า port 27018 ถูกใช้ ให้เปลี่ยน **ทั้ง** `MONGO_PORT=27019` และ port ใน URI เป็น 27019 แล้วรัน `npm run db:up` ใหม่ ไม่ต้องหยุด container ของงานอื่น
-
-**เส้นทาง port:** Express รันบนเครื่องเรา → `127.0.0.1:27018` → MongoDB ใน container port `27017` คำว่า `db:27017` ใช้เมื่อ Express อยู่ใน Compose network เดียวกันเท่านั้น คาบนี้ Express รันด้วย npm บนเครื่อง
-
-การดูข้อมูลกรณีไม่มี Atlas Data Explorer ใช้:
+ดูข้อมูลแทน Atlas Data Explorer ได้ด้วย:
 
 ```bash
 docker compose exec db mongosh course_books_demo --eval 'db.drinks.find().toArray()'
-docker compose exec db mongosh course_books_demo --eval 'db.books.find().toArray()'
 docker compose exec db mongosh course_books --eval 'db.books.countDocuments()'
 ```
 
-หยุด Express ด้วย Ctrl+C แล้วหยุด DB ด้วย `npm run db:stop` เปิดใหม่ใช้ `npm run db:up` volume ยังเก็บข้อมูลไว้ **ไม่ใช้ `docker compose down -v`** เพราะ `-v` ลบ volume
-
-## ตรวจผลการทำงาน
-
-- เปิดดูข้อมูลตัวอย่างใน Atlas และชี้ database/collection/document/field ได้จากของจริง
-- อ่าน ER ทั้งสามภาพคู่กับรหัสอ้างอิงและรายการที่ฝังใน document
-- รัน API ครบเพิ่ม/อ่าน/แก้/ลบ พร้อมดู status และ JSON ที่ได้จริง
-- เพิ่มข้อมูลผ่าน React และพบข้อมูลเดิมหลัง restart Express
-
-บันทึกชื่อเล่มที่ทดลอง, id และผลใน Network เพื่อเปรียบเทียบก่อนและหลัง restart ไม่ถ่ายรหัสผ่านหรือ URI
+หยุด DB ด้วย npm run db:stop ไม่ใช้ down -v เพราะลบ volume หลังตรวจแล้ว commit เฉพาะ compose.yaml และ package.json ไม่ commit .env

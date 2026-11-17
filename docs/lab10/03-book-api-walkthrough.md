@@ -20,23 +20,15 @@
 
 อ่านภาพจากซ้ายไปขวา: ผู้ใช้กรอกสี่ field → server สร้าง titleKey และ MongoDB มี `_id` → API ส่งกลับ `id` ที่เป็น string โดยไม่ส่ง field ภายใน เราไม่ได้ให้ React เชื่อม MongoDB โดยตรง
 
-## 4.3 เพิ่มหนังสือเริ่มต้น 200 เล่ม
+## 4.3 สร้าง Book model และอ่านกติกา
 
-เปิด terminal ที่ `examples/10-mongodb-book-api`:
+ที่ terminal backend สร้างโฟลเดอร์:
 
 ```bash
-npm run seed
-npm run seed
-npm run db:check
+mkdir -p src/models
 ```
 
-บนฐานใหม่ seed ทั้งสองครั้งต้องเห็น `Seed complete. Books: 200` ส่วน db:check เห็น ping OK, Books: 200 และตัวอย่างสามเล่ม การรันซ้ำใช้ `$setOnInsert` ไม่เพิ่มชื่อเดิมซ้ำและไม่ทับข้อมูลที่แก้ไว้แล้ว ถ้าเคยเพิ่มหนังสืออื่น จำนวนอาจเกิน 200 ไม่ต้องลบทิ้ง
-
-เปิด Atlas → **course_books → books** (ไม่ใช่ course_books_demo) → Filter `{ "title": "Pride and Prejudice" }` → Find จะเห็นเล่มเดียวกับที่ seed มา ขยายดู title/author/sourceType/summary และ titleKey
-
-## 4.4 เปิด Book model และอ่านกติกา
-
-ใน VS Code คลิก `src` → `models` → `Book.js` เพื่อดู field และเงื่อนไขของหนังสือ:
+ใน VS Code คลิก backend/src/models → New File → ตั้งชื่อ **Book.js** คัดลอกโค้ดด้านล่างหรือเปิด [Book.js บน GitHub แลบ](../../examples/10-mongodb-book-api/src/models/Book.js) แล้วคัดลอกเนื้อหา วางและ Save
 
 ```js
 import mongoose from 'mongoose';
@@ -65,9 +57,36 @@ export const Book = mongoose.model('Book', bookSchema);
 
 `titleKey` คือชื่อที่ server trim แล้วเปลี่ยนเป็นตัวพิมพ์เล็ก ใช้เป็นกติกาชื่อไม่ซ้ำของแลบนี้ ไม่ใช่กฎว่าหนังสือจริงทุกฉบับต้องชื่อไม่ซ้ำ `unique` เป็น index ไม่ใช่ Mongoose validator จึงต้องจัดการ duplicate-key error ต่างหาก
 
+## 4.4 สร้าง seed script แล้วเพิ่มหนังสือ 200 เล่ม
+
+สร้างไฟล์สองรายการนี้ใน VS Code และคัดลอกเนื้อหาจากลิงก์:
+
+| ไฟล์อ้างอิงใน GitHub แลบ | สร้างใน repo เรา | หน้าที่ |
+|---|---|---|
+| [src/books.js](../../examples/10-mongodb-book-api/src/books.js) | `backend/src/books.js` | metadata หนังสือ 200 เล่ม |
+| [scripts/seed.js](../../examples/10-mongodb-book-api/scripts/seed.js) | `backend/scripts/seed.js` | อ่าน metadata แล้วเพิ่มผ่าน Book model |
+
+ใน scripts/seed.js ดู import ไป ../src/models/Book.js และ ../src/books.js: ตอนนี้เราสร้างปลายทางทั้งสองแล้ว เพิ่มคำสั่งจาก terminal backend:
+
+```bash
+npm pkg set 'scripts.seed=node --env-file=.env scripts/seed.js'
+```
+
+เปิด terminal ที่ `dti201-bookstore/backend`:
+
+```bash
+npm run seed
+npm run seed
+npm run db:check
+```
+
+บนฐานใหม่ seed ทั้งสองครั้งต้องเห็น `Seed complete. Books: 200` ส่วน db:check เห็น ping OK, Books: 200 และตัวอย่างสามเล่ม การรันซ้ำใช้ `$setOnInsert` ไม่เพิ่มชื่อเดิมซ้ำและไม่ทับข้อมูลที่แก้ไว้แล้ว ถ้าเคยเพิ่มหนังสืออื่น จำนวนอาจเกิน 200 ไม่ต้องลบทิ้ง
+
+เปิด Atlas → **course_books → books** (ไม่ใช่ course_books_demo) → Filter `{ "title": "Pride and Prejudice" }` → Find จะเห็นเล่มเดียวกับที่ seed มา ขยายดู title/author/sourceType/summary และ titleKey
+
 ## 4.5 เปิด store: ส่วนที่คุยกับ model
 
-คลิก `src/book-store.js` คำว่า **store** หมายถึงกลุ่มฟังก์ชันสำหรับอ่าน/เพิ่ม/แก้/ลบข้อมูล ไฟล์นี้เรียก Book model แล้วแปลงผลเป็นข้อมูลที่ API ส่งออก:
+ใน backend/src สร้างไฟล์ **book-store.js** วางโค้ดด้านล่างแล้ว Save (อ้างอิง [book-store.js](../../examples/10-mongodb-book-api/src/book-store.js)) คำว่า **store** หมายถึงกลุ่มฟังก์ชันสำหรับอ่าน/เพิ่ม/แก้/ลบข้อมูล ไฟล์นี้เรียก Book model แล้วแปลงผลเป็นข้อมูลที่ API ส่งออก:
 
 ```js
 import { Book } from './models/Book.js';
@@ -127,7 +146,7 @@ export function createBookStore() {
 
 ## 4.6 เปิด routes: ส่วนที่รับ HTTP
 
-คลิก `src/app.js` เพื่อดูว่าแต่ละ method และ URL เรียกฟังก์ชันใด ตารางนี้อธิบายชื่อที่ใช้ใน routes:
+ใน backend/src สร้างไฟล์ **app.js** คัดลอกเนื้อหาจาก [src/app.js](../../examples/10-mongodb-book-api/src/app.js) แล้ว Save เปิดอ่านว่าแต่ละ method และ URL เรียกฟังก์ชันใด ตารางนี้อธิบายชื่อที่ใช้ใน routes:
 
 | คำในโค้ด | หมายถึงอะไร |
 |---|---|
@@ -165,7 +184,16 @@ res.status(201).location(`/api/books/${book.id}`).json({ data: book });
 
 ## 4.7 เปิด server แล้วค่อยส่งคำขอ
 
-เปิด `src/server.js` มีลำดับสำคัญ:
+ใน backend/src สร้างไฟล์ **server.js** คัดลอกเนื้อหาจาก [src/server.js](../../examples/10-mongodb-book-api/src/server.js) แล้ว Save ไฟล์นี้ import db.js, models/Book.js และ app.js ที่สร้างมาก่อน จึงต้องสะกดชื่อให้ตรง
+
+เพิ่มคำสั่งเปิด server จาก terminal backend:
+
+```bash
+npm pkg set 'scripts.dev=node --env-file=.env --watch src/server.js'
+npm pkg set 'scripts.start=node --env-file=.env src/server.js'
+```
+
+เปิด src/server.js ดูลำดับสำคัญ:
 
 ```js
 await connectDatabase();
@@ -275,3 +303,19 @@ curl -i -X POST http://localhost:3001/api/books -H 'Content-Type: application/js
 ผลตามลำดับคือ 422 (ID ผิดรูป), 404 (ID ถูกรูปแต่ไม่มี), 422 (limit นอกช่วง), 422 (field ไม่ครบ/ชื่อสั้น), 400 (JSON เสีย) ตัวอย่าง error body มี title/status/requestId ไม่ใช่ stack trace หรือ URI
 
 ต่อที่ [ช่วง 5 เปิด React ใช้ API เดียวกัน](04-react-and-checks.md)
+
+## 4.15 Commit API ที่ทดลองแล้ว
+
+หยุด Express ใน terminal A ด้วย Ctrl+C จาก terminal backend กลับราก repo:
+
+```bash
+cd ..
+git status --short
+git add backend/src backend/scripts backend/package.json backend/package-lock.json
+git diff --cached
+git commit -m "Add persistent book CRUD API"
+git push
+cd backend
+```
+
+บน GitHub repo เราจะเห็น Book model, book-store.js, app.js, server.js และ seed script อยู่ใน backend ของตน ไม่มี .env อยู่ใน commit เปิด Express ต่อได้ด้วย npm run dev ใน backend

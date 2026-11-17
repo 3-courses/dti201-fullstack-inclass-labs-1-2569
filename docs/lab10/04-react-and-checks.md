@@ -10,38 +10,60 @@ Frontend คือส่วนที่แสดงใน browser ผู้ใ�
 
 Vite เป็นเครื่องมือเปิด frontend ระหว่างพัฒนา ไม่ใช่ Express และไม่ใช่ MongoDB วันนี้จึงมี terminal ของ Express และ terminal ของ Vite เปิดพร้อมกัน ส่วน MongoDB อยู่บน Atlas
 
-## 5.2 เปิดสอง terminal ให้ถูกโฟลเดอร์
+## 5.2 สร้าง frontend ใน repo เรา
 
-ถ้า terminal A จากช่วง 4 ยังแสดง API listening ให้เปิดค้างไว้ ถ้าหยุดแล้วให้รัน:
+เปิด Express ที่สร้างในช่วง 4 ไว้ใน terminal A หากยังไม่ได้เปิด ให้เข้า `dti201-bookstore/backend` แล้วรัน `npm run dev` รอ API listening on port 3001
 
-```bash
-npm run dev
-```
-
-คำสั่งนี้รันที่ backend `examples/10-mongodb-book-api/`
-
-เปิด terminal **C** ใหม่ ตรวจด้วย `pwd` ก่อน ถ้าอยู่ที่ราก repo ให้:
+เปิด terminal **C** ใหม่ที่ราก `dti201-bookstore` ตรวจด้วย pwd แล้วรัน:
 
 ```bash
-cd examples/10-mongodb-book-api/client
+mkdir frontend
+cd frontend
+npm init -y
+npm pkg set type=module
+npm install react@19.3.1 react-dom@19.3.1
+npm install -D vite@8.3.8 @vitejs/plugin-react@6.3.0
+mkdir src
 ```
 
-ถ้าอยู่ที่ backend แล้ว ใช้ `cd client` เท่านั้น อย่า cd ซ้ำหลายระดับ `ls` ใน client ต้องเห็น `package.json`, `index.html`, `vite.config.js`, `src`
+React สร้างส่วนแสดงผล react-dom นำ React ไปแสดงในหน้า HTML ส่วน Vite และ plugin-react เป็นเครื่องมือระหว่างพัฒนา จึงใส่ `-D` เพื่อบันทึกเป็น devDependencies
 
-จาก client รัน:
+**ผลที่ควรเห็น:** frontend มี package.json, package-lock.json, node_modules และ src ที่ยังว่าง เป็น package คนละชุดกับ backend แต่เก็บอยู่ใน Git repo เดียวกัน
+
+เพิ่มคำสั่ง npm ของ frontend:
 
 ```bash
-npm ci
-npm run dev
+npm pkg set 'scripts.dev=vite --host 127.0.0.1'
+npm pkg set 'scripts.build=vite build'
+npm pkg set 'scripts.preview=vite preview --host 127.0.0.1'
 ```
 
-รอจนเห็น URL **http://127.0.0.1:5174/** แล้วเปิดใน browser พิมพ์ URL นี้ลง address bar ไม่เปิดไฟล์ index.html ด้วยการดับเบิลคลิก
+สร้างแต่ละไฟล์ใน VS Code แล้วคัดลอกเนื้อหาจากลิงก์อ้างอิงตามตาราง **ชื่อโฟลเดอร์ client ใน repo แลบ เปลี่ยนเป็น frontend ในงานเรา** แต่เนื้อหา import ภายในยังใช้ได้เพราะลำดับไฟล์ข้างในตรงกัน:
 
-| โปรแกรม | เปิดอย่างไร | ผลที่ควรเห็น |
+| ไฟล์อ้างอิงใน GitHub แลบ | สร้างใน repo เรา | หน้าที่ |
 |---|---|---|
-| MongoDB | Cluster0 บน Atlas | เอกสารใน Data Explorer |
-| Express | terminal A, backend npm run dev | API listening on port 3001 |
-| Vite/React | terminal C, client npm run dev | Local URL port 5174 |
+| [client/index.html](../../examples/10-mongodb-book-api/client/index.html) | `frontend/index.html` | HTML ที่มี root สำหรับ React และโหลด main.jsx |
+| [client/vite.config.js](../../examples/10-mongodb-book-api/client/vite.config.js) | `frontend/vite.config.js` | เปิด port 5174 และส่ง /api ไป Express |
+| [client/src/main.jsx](../../examples/10-mongodb-book-api/client/src/main.jsx) | `frontend/src/main.jsx` | นำ App และ CSS ไปแสดงใน root |
+| [client/src/style.css](../../examples/10-mongodb-book-api/client/src/style.css) | `frontend/src/style.css` | รูปแบบตัวอักษร ฟอร์ม และรายการ |
+| [client/src/api.js](../../examples/10-mongodb-book-api/client/src/api.js) | `frontend/src/api.js` | ส่ง HTTP และอ่าน response/error |
+| [client/src/App.jsx](../../examples/10-mongodb-book-api/client/src/App.jsx) | `frontend/src/App.jsx` | ฟอร์ม รายการ state และปุ่ม CRUD |
+
+ทำทีละไฟล์: คลิกโฟลเดอร์ปลายทาง → New File → ชื่อตามตาราง → วางเนื้อหา → Save อย่าใส่ไฟล์ src ไว้ระดับเดียวกับ index.html และอย่าตั้ง App.jsx เป็น app.jsx เพราะ main.jsx import ด้วย A ตัวใหญ่
+
+เปิด frontend/index.html ตรวจ `/src/main.jsx` แล้วเปิด main.jsx ตรวจว่า import App.jsx และ style.css ตรงชื่อไฟล์ที่สร้าง จากนั้นใน terminal C ที่ frontend:
+
+```bash
+npm run dev
+```
+
+รอ URL **http://127.0.0.1:5174/** แล้วเปิดใน browser พิมพ์ URL นี้ใน address bar ไม่เปิด index.html ด้วยการดับเบิลคลิก
+
+| โปรแกรม | โฟลเดอร์/คำสั่ง | ผลที่ควรเห็น |
+|---|---|---|
+| MongoDB | Cluster0 บน Atlas | documents ใน Data Explorer |
+| Express | terminal A, backend: npm run dev | API listening on port 3001 |
+| Vite/React | terminal C, frontend: npm run dev | Local URL port 5174 |
 
 ## 5.3 เมื่อหน้าเว็บเปิดแล้วควรเห็นอะไร
 
@@ -55,7 +77,7 @@ npm run dev
 
 ## 5.4 หน้าเว็บเรียก Express ได้อย่างไร
 
-เปิด `client/vite.config.js`:
+เปิด `frontend/vite.config.js`:
 
 ```js
 proxy: { '/api': { target: 'http://127.0.0.1:3001' } }
@@ -98,7 +120,7 @@ Find จะเห็น document ของเล่มนี้ ถ้าใช�
 
 ## 5.7 ตามโค้ดของการกดปุ่มหนึ่งครั้ง
 
-เปิด `client/src/App.jsx` ดูฟังก์ชัน `save`:
+เปิด `frontend/src/App.jsx` ดูฟังก์ชัน `save`:
 
 ```js
 const body = await request(path, {
@@ -114,7 +136,7 @@ const body = await request(path, {
 - `await` รอ server ตอบ ถ้าไม่สำเร็จ helper จะ throw แล้ว catch เอาข้อความขึ้นหน้าเว็บ
 - ถ้าสำเร็จ `body.data` คือหนังสือที่ server บันทึกแล้ว ไม่ใช่การเดา ID ใน browser
 
-เปิด `client/src/api.js` จะเห็น helper `request` เรียก fetch, อ่าน JSON และตรวจ `response.ok` แยกกรณี DELETE 204 ที่ไม่มี JSON ออกจากคำขออื่น
+เปิด `frontend/src/api.js` จะเห็น helper `request` เรียก fetch, อ่าน JSON และตรวจ `response.ok` แยกกรณี DELETE 204 ที่ไม่มี JSON ออกจากคำขออื่น
 
 ![เส้นทางคำขอผ่าน route store model และ MongoDB](../../assets/lab10/request-path.png)
 
@@ -158,7 +180,7 @@ const body = await request(path, {
 |---|---|---|
 | port 5174 ใช้อยู่ | ดู terminal C; หยุด Vite ของงานนี้ที่เปิดซ้ำก่อน ไม่หยุดงานผู้อื่น | Vite แสดง URL เดิม |
 | หน้าเว็บได้ 500/connection refused | curl API, terminal A, Atlas IP/DB user | GET กลับเป็น 200 |
-| หน้าเว็บได้ 404 จาก Vite | เปิด client/vite.config.js ตรวจ /api proxy และ restart Vite | Network ไป /api/books สำเร็จ |
+| หน้าเว็บได้ 404 จาก Vite | เปิด frontend/vite.config.js ตรวจ /api proxy และ restart Vite | Network ไป /api/books สำเร็จ |
 | ได้ 409 ตอนเพิ่ม | ชื่อมีแล้ว; เปลี่ยนชื่อทดลอง | POST 201 |
 | เพิ่มแล้วไม่เห็นหน้าแรก | เรียงตาม _id; ดู id ในข้อความ/Atlas หรือไปหน้าถัดไป | พบ document เดียวกัน |
 | ตัวเลข/ข้อมูลไม่ตรงใน Atlas | ตรวจว่าเปิด course_books ไม่ใช่ course_books_demo | พบ metadata ของ API |
@@ -168,3 +190,59 @@ const body = await request(path, {
 กด Ctrl+C ใน A และ C เพื่อหยุด Express/Vite Atlas เก็บข้อมูลต่อโดยไม่ต้องเปิด terminal ค้าง ถ้าใช้ Docker ทางเลือก หยุด DB ที่ backend ด้วย `npm run db:stop` ไม่ใช้ down -v
 
 หลังเปิดแอปครั้งถัดไป ให้รัน Express และ Vite จากโฟลเดอร์เดิม แล้วโหลดรายการหนังสือ ข้อมูลที่ยังไม่ได้ลบจะถูกอ่านกลับจาก MongoDB
+
+## 5.13 Build แล้ว commit frontend
+
+หยุด Vite ใน terminal C ด้วย Ctrl+C จาก frontend รัน:
+
+```bash
+npm run build
+```
+
+ควรสร้าง dist และจบโดยไม่มี error เราไม่ commit dist เพราะสร้างใหม่จาก source ได้ กลับราก repo:
+
+```bash
+cd ..
+git status --short
+git add frontend/package.json frontend/package-lock.json frontend/index.html frontend/vite.config.js frontend/src
+git diff --cached
+git commit -m "Add React interface for book CRUD"
+git push
+```
+
+กลับ GitHub repo ของเรา กด refresh จะเห็น backend และ frontend อยู่คู่กัน เปิด History/Commits จะเห็นงานเป็นช่วง: เริ่ม repo → ต่อ Atlas → model เครื่องดื่ม → Book API → React
+
+## 5.14 เติมวิธีรันใน README ของเรา
+
+เปิด README.md ที่ราก repo เพิ่มส่วนนี้ใต้เนื้อหาเดิม แล้วบันทึก:
+
+```markdown
+## วิธีรัน
+
+ใช้ Node.js 22.12 ขึ้นไป
+
+### Backend
+
+1. เข้า backend แล้วรัน npm ci
+2. คัดลอก .env.example เป็น .env และใส่ URI ของ Atlas ของผู้รันเอง
+3. รัน npm run db:check และ npm run seed
+4. รัน npm run dev — API ใช้ port 3001
+
+### Frontend
+
+1. เปิด terminal ใหม่ เข้า frontend แล้วรัน npm ci
+2. รัน npm run dev
+3. เปิด http://127.0.0.1:5174/
+```
+
+คำสั่ง npm ci ใน README ใช้กับการติดตั้งงานที่มี package-lock.json แล้ว ไม่ใช่แทน npm init/install ในตอนเริ่มสร้าง repo จากนั้นที่ราก repo:
+
+```bash
+git add README.md
+git diff --cached
+git commit -m "Document local setup and run commands"
+git push
+git status
+```
+
+ผลสุดท้ายคือ working tree clean และ README บน GitHub อธิบายให้คนอื่นรันงานของเราได้ โดยต้องใช้บัญชี Atlas ของตนเองแทนข้อมูลรับรองของเรา

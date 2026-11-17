@@ -64,3 +64,12 @@ render('env-loading','จาก .env ผ่าน Node.js ไปเชื่อ�
  arrow(375,265,440,265)+box(445,155,480,230,'node --env-file=.env',['อ่านไฟล์ก่อนเริ่ม JavaScript','process.env.MONGODB_URI','process.env.PORT'])+
  arrow(925,265,990,265)+box(995,155,410,230,'src/db.js เชื่อม MongoDB',['mongoose.connect(uri)','ใช้ URI ติดต่อฐานข้อมูล','Book model อ่าน/เขียนข้อมูล'])+
  text(45,475,'.env.example แสดงชื่อค่าที่ต้องตั้ง; คำสั่งในแลบอ่านค่าจริงจาก .env',24))
+render('developer-workflow','สร้างและบันทึกงานใน GitHub repository ของเรา','แต่ละช่วงสร้างไฟล์ที่ต้องใช้ ตรวจผล แล้วส่งประวัติงานกลับไปยัง repo ของตน',
+ box(35,165,310,240,'1. Repo ของเรา',['GitHub: New repository','clone URL บัญชีเรา','origin ชี้ repo ของเรา'])+
+ arrow(345,280,390,280)+box(395,165,310,240,'2. สร้างไฟล์',['VS Code: New File','คัดลอกเนื้อหาตามลิงก์','รันคำสั่งและตรวจผล'])+
+ arrow(705,280,750,280)+box(755,165,310,240,'3. บันทึกบนเครื่อง',['git status / git diff','git add ชื่อไฟล์','git commit -m "..."'])+
+ arrow(1065,280,1110,280)+box(1115,165,290,240,'4. ส่งขึ้น GitHub',['git push','refresh repo ของเรา','ดูไฟล์และ commit ใหม่']))
+render('copy-file-content','คัดลอกเนื้อหาไฟล์ ไม่ย้ายทั้งโปรเจกต์','เปิด GitHub แลบใน browser แล้วสร้างไฟล์ปลายทางใน VS Code',
+ box(45,165,620,245,'GitHub แลบ: ไฟล์อ้างอิง',['examples/10-mongodb-book-api/','src/db.js','Copy raw contents'])+
+ arrow(665,285,765,285)+box(785,165,610,245,'Repo ของเรา: ไฟล์ที่สร้าง',['dti201-bookstore/backend/','src/db.js','New File, วางเนื้อหา, Save'])+
+ text(45,490,'package.json สร้างด้วย npm init; package-lock.json สร้างจาก npm install ของงานเรา',23))

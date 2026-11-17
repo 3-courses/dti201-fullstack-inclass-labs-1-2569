@@ -28,9 +28,9 @@ lab ชุดนี้ใช้พร้อมกับการบรรยา�
 | 15 | 15 | Performance, resource use, sustainability และ polish | [labs/15-performance-sustainability-polish.md](labs/15-performance-sustainability-polish.md) |
 | 16 | 16 | Final demo, oral defense และ handoff | [labs/16-final-demo-oral-defense.md](labs/16-final-demo-oral-defense.md) |
 
-### เริ่ม Lab 10 ด้วย MongoDB Atlas
+### เริ่ม Lab 10 จาก repository ของตนเอง
 
-ใช้ [ใบงาน Lab 10 แบบทีละขั้น](labs/10-book-database-crud.md) กับ **Free Cluster0 ของตนเอง** มี [starter](examples/10-mongodb-book-api/README.md), ตัวอย่างฐานข้อมูลเครื่องดื่ม การเชื่อม API/React และ [คู่มือ data model ร้านหนังสือ](docs/lab10-book-data-model.md) Docker เป็นทางเลือกพร้อม healthcheck และวิธีแก้ปัญหา
+เริ่มจาก [สร้าง GitHub repo และ clone repo ของเรา](docs/lab10/00-create-your-repository.md) แล้วสร้าง backend และ frontend ทีละไฟล์ตาม [ใบงาน Lab 10](labs/10-book-database-crud.md) ใช้ **Atlas Free Cluster0 ของตนเอง** เปิดไฟล์อ้างอิงใน GitHub แลบเพื่อคัดลอกเฉพาะเนื้อหาที่ระบุ แต่ละช่วงมีผลที่ควรเห็นและจุด commit/push งาน
 
 ### Chapter 4 recovery kit
 

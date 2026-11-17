@@ -47,7 +47,9 @@ drinks: [
 
 ไฟล์ `demo/sample-db.js` อ่าน array นี้แล้วใช้ `updateOne` กับ `$setOnInsert` ถ้ามี ID เดิมอยู่แล้วจะไม่เขียนทับ จึงรัน demo:seed ซ้ำได้โดยไม่ล้างฐานข้อมูล
 
-## 2.4 Mongoose อยู่ตรงไหน
+## 2.4 สร้าง Drink model
+
+ใน VS Code คลิก backend/demo → New File ตั้งชื่อ **Drink.js** แล้วคัดลอกเนื้อหาจาก [demo/Drink.js](../../examples/10-mongodb-book-api/demo/Drink.js) มาวางและ Save ชื่อตัวใหญ่เล็กต้องตรง
 
 MongoDB คือระบบที่เก็บข้อมูล ส่วน **Mongoose** คือไลบรารี JavaScript ใน Node.js ที่ช่วยกำหนดกติกาและสั่ง query จากโค้ด ไม่ใช่อีก database หนึ่ง
 
@@ -78,7 +80,13 @@ export const Drink = mongoose.model('Drink', drinkSchema);
 
 Schema ของ Mongoose ตรวจการเขียนที่ผ่าน Mongoose ไม่ได้ย้อนหลังตรวจทุก document ที่มีอยู่ และไม่ได้ทำให้การแก้ผ่าน Atlas UI ต้องผ่าน validator ของ JavaScript ชุดนี้
 
-## 2.5 เปิด connection ก่อน query
+## 2.5 สร้างสคริปต์อ่านเครื่องดื่ม
+
+ใน backend/demo สร้างไฟล์ **drinks.js** คัดลอกเนื้อหาจาก [demo/drinks.js](../../examples/10-mongodb-book-api/demo/drinks.js) แล้ว Save เพิ่มคำสั่ง npm จาก terminal backend:
+
+```bash
+npm pkg set 'scripts.demo:drinks=node --env-file=.env demo/drinks.js'
+```
 
 เปิด `demo/drinks.js` ช่วงเริ่มต้น:
 
@@ -164,3 +172,18 @@ npm run demo:drinks
 | console.log แสดง JSON | Express ส่ง JSON ให้ React |
 
 ต่อที่ [ER ร้านหนังสือทั้งสามภาพ](../lab10-book-data-model.md) เพื่ออ่านข้อมูลที่เชื่อมหลาย collection
+
+## 2.10 Commit model และ query เครื่องดื่ม
+
+จาก terminal backend:
+
+```bash
+cd ..
+git add backend/demo/Drink.js backend/demo/drinks.js backend/package.json
+git diff --cached
+git commit -m "Read drinks through a Mongoose model"
+git push
+cd backend
+```
+
+บน GitHub repo ของเรา ให้เปิด backend/demo จะพบ Drink.js และ drinks.js ส่วนข้อมูลใน Atlas อยู่ในฐานเดิม ไม่ได้เก็บ document ลง Git

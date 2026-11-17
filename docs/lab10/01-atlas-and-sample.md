@@ -4,44 +4,59 @@
 
 เป้าหมายช่วงนี้คือให้เห็นข้อมูลในฐานจริงก่อน เราจะยังไม่เริ่ม React และยังไม่ต้องเข้าใจโค้ด model ทั้งหมด
 
-## 1.1 เปิดโฟลเดอร์ให้ถูกก่อน
+## 1.1 สร้างโฟลเดอร์ backend ใน repo ของเรา
 
-ใช้ Node.js **22.12 ขึ้นไป** เพื่อรันได้ทั้ง backend และ React ตัวอย่างนี้ใช้ Git Bash บน Windows หรือ terminal ของ macOS/Linux คำว่า “รัน” หมายถึงวางคำสั่งใน terminal แล้วกด Enter รอจบก่อนทำบรรทัดถัดไป ไม่ต้องพิมพ์เครื่องหมาย ``` จากกรอบโค้ด
-
-ถ้ายังไม่มี repo นี้บนเครื่อง เปิด terminal ที่โฟลเดอร์เก็บงานของเราแล้วรัน:
-
-```bash
-git clone https://github.com/3-courses/dti201-fullstack-inclass-labs-1-2569.git
-cd dti201-fullstack-inclass-labs-1-2569
-```
-
-ถ้ามี repo แล้ว เปิดโฟลเดอร์นั้นด้วย VS Code → File → Open Folder ไม่ clone ซ้ำทับงานเก่า เปิด Terminal → New Terminal จะได้ terminal ในโฟลเดอร์ที่เปิดอยู่ ใช้:
+ทำ [ช่วง 0: สร้างและ clone repo ของเรา](00-create-your-repository.md) ก่อน เปิดโฟลเดอร์ `dti201-bookstore` ใน VS Code แล้วเปิด Terminal → New Terminal ตรวจปลายทาง:
 
 ```bash
 pwd
-ls
+git remote -v
 ```
 
-ควรเห็น `README.md`, `labs`, `examples`, `assets` ถ้าเห็นอยู่แล้วเราอยู่ที่ราก repo จากนั้น:
+pwd ต้องอยู่ที่ราก dti201-bookstore และ origin เป็น URL บัญชีของเรา จากนั้น:
 
 ```bash
-cd examples/10-mongodb-book-api
-ls
-node --version
-npm --version
+mkdir backend
+cd backend
+npm init -y
+npm pkg set type=module
 ```
 
-คราวนี้ควรเห็น `package.json`, `src`, `scripts`, `demo`, `client` คำสั่ง npm ของ backend ทุกคำสั่งต่อจากนี้ใช้ terminal ที่โฟลเดอร์นี้ `pwd` ควรลงท้ายด้วย `examples/10-mongodb-book-api`
+`mkdir` สร้างโฟลเดอร์ `cd` เปลี่ยนโฟลเดอร์ที่ terminal ทำงาน `npm init -y` สร้าง package.json ของ backend โดยใช้ค่าตั้งต้น ส่วน `type=module` ให้ไฟล์ .js ใช้ import/export ได้
 
-## 1.2 ติดตั้งสิ่งที่โปรแกรมต้องใช้
+**ผลที่ควรเห็น:** Explorer มี `backend/package.json` ภายในมี `"name": "backend"` และ `"type": "module"` ยังไม่มี source code หรือ database connection จนกว่าเราจะสร้างไฟล์ในขั้นถัดไป
+
+## 1.2 ติดตั้งแพ็กเกจ แล้วสร้างไฟล์ตรวจ connection
+
+รันจาก `dti201-bookstore/backend`:
 
 ```bash
-npm ci
+npm install express@5.3.0 mongoose@8.24.8
+mkdir src scripts
 ```
 
-`npm` เป็นตัวช่วยติดตั้งแพ็กเกจของ Node.js `ci` อ่านรุ่นแพ็กเกจจาก `package-lock.json` และติดตั้งใน `node_modules` จึงได้รุ่นเดียวกับชุดตัวอย่าง รอจนกลับมาเห็นบรรทัดให้พิมพ์คำสั่งใหม่
+**Express** ใช้รับ HTTP request ในช่วง 4 **Mongoose** ใช้เชื่อมและอ่าน/เขียน MongoDB การติดตั้งครั้งแรกนี้สร้าง `package-lock.json` และ `node_modules` พร้อมเพิ่ม dependencies ใน package.json
 
-เปิด `package.json` ใน VS Code จะเห็น `dependencies` เช่น `express` และ `mongoose` เราจะใช้ Express รับ HTTP และใช้ Mongoose อ่าน/เขียน MongoDB ไม่ต้อง `npm install` สองตัวนี้แยกอีก
+package-lock.json บันทึกรุ่นแพ็กเกจที่ใช้ ให้ commit ไปด้วย ส่วน node_modules ดาวน์โหลดซ้ำได้และถูก .gitignore ละเว้น หาก clone งานของเราไปเครื่องใหม่ในภายหลัง เมื่อมี lock file แล้วจึงใช้ `npm ci` เพื่อติดตั้งตามรุ่นที่บันทึกไว้
+
+สร้างไฟล์ต่อไปนี้ทีละไฟล์ใน VS Code แล้วคัดลอก **เนื้อหา** จากลิงก์อ้างอิงตามวิธีในช่วง 0.9:
+
+| ไฟล์อ้างอิงใน GitHub แลบ | สร้างใน repo เรา | หน้าที่ |
+|---|---|---|
+| [src/db.js](../../examples/10-mongodb-book-api/src/db.js) | `backend/src/db.js` | อ่าน URI จาก environment แล้วเปิด connection |
+| [scripts/check-db.js](../../examples/10-mongodb-book-api/scripts/check-db.js) | `backend/scripts/check-db.js` | ping ฐานข้อมูลและแสดงจำนวนหนังสือ |
+
+การสร้าง `src/db.js`: คลิกโฟลเดอร์ src ใน Explorer → New File → พิมพ์ db.js → วางเนื้อหาจากลิงก์ → Save ทำแบบเดียวกันกับ scripts/check-db.js ในโฟลเดอร์ scripts
+
+เปิด scripts/check-db.js จะเห็น import จาก `../src/db.js`: ย้อนจาก scripts ขึ้นหนึ่งระดับแล้วเข้า src จึงต้องสร้างสองไฟล์ในตำแหน่งตามตาราง
+
+เพิ่มชื่อคำสั่งสำหรับตรวจ DB:
+
+```bash
+npm pkg set 'scripts.db:check=node --env-file=.env scripts/check-db.js'
+```
+
+เปิด package.json ตรวจว่า scripts มี db:check ตามคำสั่งนี้ ยังไม่รัน db:check เพราะเราจะสร้าง .env และตั้ง Atlas ก่อน
 
 ## 1.3 `.env` คืออะไร และทำไมต้องแยกจากโค้ด
 
@@ -73,7 +88,7 @@ PORT=3001
 
 ### แยก `.env.example` กับ `.env`
 
-ใน VS Code เปิด `examples/10-mongodb-book-api/.env.example` จะเห็นชื่อค่าที่โปรแกรมต้องใช้ พร้อมข้อความตัวอย่างแทนข้อมูลจริง:
+ใน VS Code คลิก backend → New File → ตั้งชื่อ `.env.example` แล้ววางเนื้อหาต่อไปนี้และ Save:
 
 ```dotenv
 MONGODB_URI=mongodb+srv://DB_USER:ENCODED_PASSWORD@YOUR_HOST/course_books?retryWrites=true&w=majority
@@ -94,17 +109,16 @@ PORT=3001
 ไฟล์ต้องอยู่ที่ระดับเดียวกับ `package.json` ของ **backend**:
 
 ```text
-examples/10-mongodb-book-api/
+dti201-bookstore/backend/
 ├── .env.example
 ├── .env                 ← สร้างตรงนี้
 ├── package.json
-├── src/
-└── client/              ← ไม่ใส่ URI ของ MongoDB ในโฟลเดอร์นี้
+└── src/
 ```
 
-1. ใน Explorer ด้านซ้ายของ VS Code ขยาย `examples` → `10-mongodb-book-api`
+1. ใน Explorer ด้านซ้ายของ VS Code ขยายโฟลเดอร์ `backend` ใน repo เรา
 2. ตรวจว่ามี `.env` อยู่แล้วหรือไม่ หากมีให้เปิดไฟล์เดิม ไม่คัดลอกทับ
-3. หากยังไม่มี ให้คลิกขวา `.env.example` → Copy แล้วคลิกขวาโฟลเดอร์ `10-mongodb-book-api` → Paste
+3. หากยังไม่มี ให้คลิกขวา `.env.example` → Copy แล้วคลิกขวาโฟลเดอร์ `backend` → Paste
 4. เปลี่ยนชื่อไฟล์ที่คัดลอกเป็น **`.env`** รวมจุดด้านหน้า ไม่มี `.txt` ต่อท้าย
 5. เปิด `.env` ตรวจว่ามี MONGODB_URI และ PORT แล้วกดบันทึก
 
@@ -139,7 +153,7 @@ cp .env.example .env
 
 ### ตรวจว่าอ่านไฟล์ถูกโดยยังไม่เชื่อมฐานข้อมูล
 
-ใน terminal ที่ `examples/10-mongodb-book-api` รัน:
+ใน terminal ที่ `dti201-bookstore/backend` รัน:
 
 ```bash
 node --env-file=.env -e 'console.log(process.env.PORT)'
@@ -159,7 +173,7 @@ git check-ignore .env
 
 ควรพิมพ์ `.env` แปลว่าตรงกับกฎใน `.gitignore` หากไม่มีผล ให้ตรวจ `.gitignore` ว่ามีบรรทัด `.env` ก่อนเพิ่มไฟล์เข้า Git ไม่ใช้ `git add -f .env`
 
-เมื่อแก้ `.env` หลังเปิด Express ไปแล้ว ให้กด Ctrl+C ใน terminal ของ Express แล้วรัน `npm run dev` ใหม่ เพื่อให้ process ใหม่อ่านค่า หากเปลี่ยน PORT เช่น 3002 ต้องเปลี่ยน URL ที่ใช้ curl และ target ใน `client/vite.config.js` เป็น port เดียวกันด้วย
+เมื่อแก้ `.env` หลังเปิด Express ไปแล้ว ให้กด Ctrl+C ใน terminal ของ Express แล้วรัน `npm run dev` ใหม่ (จะเพิ่มคำสั่งนี้ในช่วง 4) เพื่อให้ process ใหม่อ่านค่า หากเปลี่ยน PORT เช่น 3002 ต้องเปลี่ยน URL ที่ใช้ curl และ target ใน `frontend/vite.config.js` เป็น port เดียวกันด้วย
 
 หลังขั้นนี้เรายังไม่เชื่อม Atlas เพราะ URI ยังเป็น placeholder ต่อไปจะเตรียมบัญชีและที่อยู่ของฐานข้อมูล แล้วกลับมาใส่ใน `.env`
 
@@ -176,7 +190,6 @@ git check-ignore .env
 ดูรูปทีละช่อง: ช่อง 1 คือคนเข้าเว็บเพื่อจัดการ ช่อง 2 คือบัญชีที่โปรแกรมใช้ ช่อง 3 คือประตูตรวจว่า connection มาจากเครือข่ายที่อนุญาต ช่อง 4 คือข้อมูลที่โปรแกรมต้องใช้เพื่อไปหาฐานข้อมูล ลูกศรในแถวบนช่วยจัดลำดับสิ่งที่จะเตรียม ไม่ใช่การส่งรหัสผ่านของแอปไปให้ browser
 
 ### ทำตามบนเว็บไซต์
-
 
 1. เปิดเว็บไซต์ MongoDB Atlas และ sign in ด้วยบัญชี Atlas ของเรา
 2. เลือก organization และ project ที่ใช้ในห้องเรียน
@@ -223,7 +236,6 @@ git check-ignore .env
 
 ### ทำตามในหน้าเครือข่าย
 
-
 1. ใน Atlas เปิด **Network Access / IP Access List**
 2. เลือก **Add IP Address → Add Current IP Address** แล้วบันทึก
 3. รอรายการเปลี่ยนเป็นพร้อมใช้งาน
@@ -241,7 +253,6 @@ IP นี้คือ IP สาธารณะขาออกของเคร�
 ขั้นนี้จะนำ URI จาก Atlas กลับมาแทนค่าตัวอย่างใน `.env` ที่สร้างในขั้น 1.3 ส่วน PORT คงเป็น 3001
 
 ### คัดลอกจาก Atlas
-
 
 1. กลับไป Cluster0 กด **Connect**
 2. เลือก **Drivers** และภาษา **Node.js**
@@ -297,7 +308,28 @@ Books: 0
 
 ถ้าไม่ผ่านให้หยุดที่นี่ ยังไม่เปิด React ดูส่วน 1.12 เพื่อแก้จุดเชื่อมต่อก่อน
 
-## 1.9 เพิ่มฐานข้อมูลตัวอย่างเล็ก
+## 1.9 สร้างไฟล์ข้อมูลตัวอย่าง แล้วเพิ่มลง MongoDB
+
+ใน terminal backend สร้างโฟลเดอร์:
+
+```bash
+mkdir demo
+```
+
+ใน VS Code สร้างไฟล์ใน demo ทีละไฟล์ แล้วคัดลอกเนื้อหาจากลิงก์:
+
+| ไฟล์อ้างอิงใน GitHub แลบ | สร้างใน repo เรา | หน้าที่ |
+|---|---|---|
+| [demo/data.js](../../examples/10-mongodb-book-api/demo/data.js) | `backend/demo/data.js` | document สมมติและ ObjectId ที่เชื่อมกัน |
+| [demo/inspect.js](../../examples/10-mongodb-book-api/demo/inspect.js) | `backend/demo/inspect.js` | อ่านข้อมูลที่เชื่อมกันและคำนวณยอด order |
+| [demo/sample-db.js](../../examples/10-mongodb-book-api/demo/sample-db.js) | `backend/demo/sample-db.js` | ต่อฐาน demo แล้วเพิ่ม/อ่านข้อมูล |
+
+sample-db.js import data.js และ inspect.js จึงต้องสร้างทั้งสามไฟล์ก่อนรัน เพิ่มคำสั่ง npm จาก terminal backend:
+
+```bash
+npm pkg set 'scripts.demo:seed=node --env-file=.env demo/sample-db.js --seed'
+npm pkg set 'scripts.demo:inspect=node --env-file=.env demo/sample-db.js'
+```
 
 เปิด `demo/data.js` จะเห็นเครื่องดื่ม 2 รายการ หนังสือ 2 เล่ม และรหัสที่เชื่อมข้อมูลเข้าด้วยกัน คำสั่ง demo:seed จะอ่านข้อมูลจากไฟล์นี้ไปเพิ่มใน MongoDB
 
@@ -360,11 +392,33 @@ npm run demo:inspect
 
 ส่วนฐานหลัก `course_books` อาจยังไม่เห็นใน Data Explorer ถ้ายังไม่มีการเขียน จะสร้างหนังสือ 200 เล่มในช่วง 4 ตอนนี้ดูฐาน demo ให้เข้าใจก่อน
 
-## 1.12 ถ้าผลไม่ตรง ให้แก้ทีละจุด
+## 1.12 Commit การเชื่อม Atlas และฐานตัวอย่าง
+
+จาก terminal backend กลับราก repo ด้วย `cd ..`:
+
+```bash
+cd ..
+git status --short
+git check-ignore backend/.env backend/node_modules
+```
+
+ควรเห็น backend/.env และ backend/node_modules จาก check-ignore และไม่เห็นสองรายการนี้ใน status ไฟล์ที่ควรส่งขึ้น GitHub คือ package.json, package-lock.json, .env.example และ source code
+
+```bash
+git add backend/package.json backend/package-lock.json backend/.env.example backend/src/db.js backend/scripts/check-db.js backend/demo
+git diff --cached
+git commit -m "Connect Atlas and add sample database"
+git push
+cd backend
+```
+
+ก่อน commit อ่าน diff ให้แน่ใจว่า .env.example ยังเป็น placeholder และไม่มีรหัสผ่าน กลับ GitHub repo ของเรา กด refresh จะเห็นโฟลเดอร์ backend และ commit ใหม่ `.env` ต้องไม่อยู่ในรายการไฟล์
+
+## 1.13 ถ้าผลไม่ตรง ให้แก้ทีละจุด
 
 | อาการ | ทำตามนี้ | แล้วรันใหม่ |
 |---|---|---|
-| `npm` หา package.json ไม่พบ | ใช้ `pwd`, `ls`; เข้า `examples/10-mongodb-book-api` | `npm ci` |
+| `npm` หา package.json ไม่พบ | ใช้ `pwd`, `ls`; เข้า `dti201-bookstore/backend` | `npm install` |
 | `.env: not found` | สร้าง `.env` ที่ระดับเดียวกับ package.json; ตรวจว่าไม่ใช่ `.env.txt` | `npm run db:check` |
 | ข้อความให้แทน placeholder | เปิด `.env` จริงแล้วใส่ค่าทั้งสามจุด; บันทึกไฟล์ | `npm run db:check` |
 | database operation failed | ตรวจ database user, รหัสผ่าน/encoding, IP access list, Cluster0 พร้อม, network/DNS | `npm run db:check` |
