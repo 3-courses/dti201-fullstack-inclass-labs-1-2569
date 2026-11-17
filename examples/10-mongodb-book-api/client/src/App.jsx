@@ -87,7 +87,7 @@ export default function App() {
     </section>
     <section aria-labelledby="list-title">
       <h2 id="list-title">รายการหนังสือ</h2>
-      <p>รายการที่ {offset + 1}–{offset + books.length} · หน้าละ {pageSize} เล่ม</p>
+      <p>{books.length ? `รายการที่ ${offset + 1}–${offset + books.length}` : 'ยังไม่มีหนังสือในหน้านี้'} · หน้าละ {pageSize} เล่ม</p>
       <nav aria-label="หน้ารายการ"><button disabled={busy || offset === 0} onClick={() => setOffset(Math.max(0, offset - pageSize))}>ก่อนหน้า</button><button disabled={busy || books.length < pageSize} onClick={() => setOffset(offset + pageSize)}>ถัดไป</button></nav>
       <ul>{books.map(book => <li key={book.id}>
         <h3>{book.title}</h3><p>{book.author} · {book.sourceType}</p><p>{book.summary}</p>
